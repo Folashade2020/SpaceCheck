@@ -48,6 +48,9 @@ export default async function DashboardPage() {
           <Link href="/search" className="underline">
             Search properties
           </Link>
+          <Link href="/submit" className="underline">
+            List a property
+          </Link>
         </div>
       </div>
 

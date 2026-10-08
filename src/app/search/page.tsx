@@ -20,7 +20,15 @@ export default async function SearchPage() {
 
   return (
     <div className="space-y-4">
-      <h1 className="text-2xl font-bold">Search properties</h1>
+      <div className="flex items-center justify-between">
+        <h1 className="text-2xl font-bold">Search properties</h1>
+        <Link
+          href="/submit"
+          className="rounded-full bg-zinc-900 px-4 py-2 text-sm text-white"
+        >
+          List a property
+        </Link>
+      </div>
       <p className="text-sm text-zinc-600">
         Best Match for You (Fit Score) arrives in Phase 2. For now: newest
         properties with evidence labels.

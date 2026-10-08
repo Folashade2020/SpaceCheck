@@ -20,6 +20,9 @@ export default async function Navbar() {
           </Link>
           {user ? (
             <>
+              <Link href="/submit" className="hover:underline">
+                List property
+              </Link>
               <Link href="/dashboard" className="hover:underline">
                 Dashboard
               </Link>
