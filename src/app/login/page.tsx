@@ -17,22 +17,22 @@ export default async function LoginPage({
         </p>
       )}
       <form action={login} className="mt-4 space-y-3">
-        <label className="block text-sm">
+        <label className="block text-sm font-medium text-zinc-900">
           Email
           <input
             name="email"
             type="email"
             required
-            className="mt-1 w-full rounded border px-3 py-2"
+            className="mt-1 w-full rounded border border-zinc-300 bg-white px-3 py-2 text-zinc-900 placeholder:text-zinc-400 focus:outline-none focus:ring-2 focus:ring-zinc-900"
           />
         </label>
-        <label className="block text-sm">
+        <label className="block text-sm font-medium text-zinc-900">
           Password
           <input
             name="password"
             type="password"
             required
-            className="mt-1 w-full rounded border px-3 py-2"
+            className="mt-1 w-full rounded border border-zinc-300 bg-white px-3 py-2 text-zinc-900 focus:outline-none focus:ring-2 focus:ring-zinc-900"
           />
         </label>
         <button
