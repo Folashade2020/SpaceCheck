@@ -1,5 +1,7 @@
 import { createClient } from "@/lib/supabase/server";
 import { notFound } from "next/navigation";
+import Link from "next/link";
+import { calculateFitScore, type PriorityKey } from "@/lib/fitScore";
 
 function display(value: unknown) {
   if (value === null || value === undefined || value === "") {
@@ -33,6 +35,29 @@ export default async function PropertyPage({
     .order("created_at", { ascending: false })
     .limit(20);
 
+  // Personal fit (PRD Sec 12-13): score + confidence separate, never invented.
+  const {
+    data: { user },
+  } = await supabase.auth.getUser();
+  let prefs = null;
+  if (user) {
+    const { data } = await supabase
+      .from("preferences")
+      .select("*")
+      .eq("user_id", user.id)
+      .single();
+    if (data) {
+      prefs = {
+        areas: Array.isArray(data.areas) ? data.areas : [],
+        budget_min: data.budget_min ?? null,
+        budget_max: data.budget_max ?? null,
+        property_type: data.property_type ?? null,
+        priorities: (Array.isArray(data.priorities) ? data.priorities : []) as PriorityKey[],
+      };
+    }
+  }
+  const fit = calculateFitScore(property, prefs);
+
   return (
     <div className="space-y-4">
       <div className="rounded-2xl bg-white p-6 shadow-sm">
@@ -54,12 +79,45 @@ export default async function PropertyPage({
 
       <div className="rounded-2xl bg-white p-6 shadow-sm">
         <p className="text-xs font-semibold text-zinc-500">
-          Section 2 — Your Property Fit (Phase 2)
+          Section 2 — Your Property Fit
         </p>
-        <p className="mt-1 text-sm text-zinc-600">
-          Limited information — not enough data to calculate a reliable score
-          yet.
-        </p>
+        {fit.score === null ? (
+          <p className="mt-1 text-sm text-zinc-600">
+            {fit.concerns[0] ?? "Not enough information."}{" "}
+            <Link href="/preferences" className="underline">
+              Set preferences
+            </Link>
+          </p>
+        ) : (
+          <>
+            <p className="mt-1 text-2xl font-bold">
+              {fit.score}/100{" "}
+              <span className="text-sm font-normal text-zinc-500">
+                Confidence: {fit.confidence}
+              </span>
+            </p>
+            {fit.reasons.length > 0 && (
+              <>
+                <p className="mt-2 text-sm font-semibold">Why this matches you</p>
+                <ul className="list-disc pl-5 text-sm text-zinc-600">
+                  {fit.reasons.map((r) => (
+                    <li key={r}>{r}</li>
+                  ))}
+                </ul>
+              </>
+            )}
+            {fit.concerns.length > 0 && (
+              <>
+                <p className="mt-2 text-sm font-semibold">Things to consider</p>
+                <ul className="list-disc pl-5 text-sm text-amber-700">
+                  {fit.concerns.map((c) => (
+                    <li key={c}>{c}</li>
+                  ))}
+                </ul>
+              </>
+            )}
+          </>
+        )}
       </div>
 
       <div className="rounded-2xl bg-white p-6 shadow-sm">

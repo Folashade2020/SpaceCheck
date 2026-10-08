@@ -45,6 +45,9 @@ export default async function DashboardPage() {
           <Link href="/onboarding" className="underline">
             Change role
           </Link>
+          <Link href="/preferences" className="underline">
+            Set preferences
+          </Link>
           <Link href="/search" className="underline">
             Search properties
           </Link>

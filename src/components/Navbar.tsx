@@ -23,6 +23,9 @@ export default async function Navbar() {
               <Link href="/submit" className="hover:underline">
                 List property
               </Link>
+              <Link href="/preferences" className="hover:underline">
+                Preferences
+              </Link>
               <Link href="/dashboard" className="hover:underline">
                 Dashboard
               </Link>
