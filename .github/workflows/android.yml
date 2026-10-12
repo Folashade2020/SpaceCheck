@@ -88,23 +88,3 @@ jobs:
         with:
           name: spacecheck-android
           path: dist/
-
-  release:
-    needs: build
-    runs-on: ubuntu-latest
-    if: github.event_name == 'push' || github.event_name == 'workflow_dispatch'
-    steps:
-      - name: Download artifacts
-        uses: actions/download-artifact@v4
-        with:
-          name: spacecheck-android
-          path: dist
-
-      - name: Create GitHub Release
-        run: |
-          TAG="android-v1.0.0-build-${{ github.run_number }}"
-          gh release create "$TAG" dist/* \
-            --title "SpaceCheck Android v1.0.0 (build ${{ github.run_number }})" \
-            --notes "SpaceCheck Android release. Package: com.spacecheck.app, version 1.0.0 (1). Install SpaceCheck-release.apk directly on Android (allow unknown sources). SpaceCheck-release.aab is the Play Store bundle."
-        env:
-          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
