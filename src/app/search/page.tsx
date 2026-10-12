@@ -1,4 +1,5 @@
 import Link from "next/link";
+import MapView from "@/components/MapView";
 import { createClient } from "@/lib/supabase/server";
 import { calculateFitScore, type PriorityKey } from "@/lib/fitScore";
 
@@ -9,7 +10,13 @@ function display(value: string | number | null | undefined) {
   return String(value);
 }
 
-export default async function SearchPage() {
+export default async function SearchPage({
+  searchParams,
+}: {
+  searchParams: Promise<{ view?: string }>;
+}) {
+  const { view } = await searchParams;
+  const isMap = view === "map";
   const supabase = await createClient();
   const {
     data: { user },
@@ -54,6 +61,18 @@ export default async function SearchPage() {
         </h1>
         <div className="flex gap-2">
           <Link
+            href="/search"
+            className={`rounded-full px-4 py-2 text-sm ${!isMap ? "bg-zinc-900 text-white" : "border hover:bg-zinc-100"}`}
+          >
+            List
+          </Link>
+          <Link
+            href="/search?view=map"
+            className={`rounded-full px-4 py-2 text-sm ${isMap ? "bg-zinc-900 text-white" : "border hover:bg-zinc-100"}`}
+          >
+            Map
+          </Link>
+          <Link
             href="/preferences"
             className="rounded-full border px-4 py-2 text-sm hover:bg-zinc-100"
           >
@@ -80,6 +99,21 @@ export default async function SearchPage() {
         </p>
       )}
 
+      {isMap ? (
+        <MapView
+          properties={ranked.map(({ property: p, fit }) => ({
+            id: p.id,
+            property_type: p.property_type,
+            bedrooms: p.bedrooms,
+            rent: p.rent,
+            neighborhood: p.neighborhood,
+            general_area: p.general_area,
+            area: p.area,
+            estate: p.estate,
+            score: fit.score,
+          }))}
+        />
+      ) : (
       <div className="grid gap-4 md:grid-cols-2">
         {ranked.map(({ property: p, fit }) => (
           <Link
@@ -121,6 +155,7 @@ export default async function SearchPage() {
           </Link>
         ))}
       </div>
+      )}
 
       {(!properties || properties.length === 0) && !error && (
         <p className="rounded bg-white p-4 text-sm text-zinc-600">
