@@ -2,7 +2,7 @@ import { createClient } from "@/lib/supabase/server";
 import { notFound } from "next/navigation";
 import Link from "next/link";
 import { calculateFitScore, type PriorityKey } from "@/lib/fitScore";
-import { saveProperty, unsaveProperty, requestViewing } from "./actions";
+import { saveProperty, unsaveProperty, requestViewing, updateAvailability } from "./actions";
 import ShareButton from "./share-button";
 
 function display(value: unknown) {
@@ -17,10 +17,10 @@ export default async function PropertyPage({
   searchParams,
 }: {
   params: Promise<{ id: string }>;
-  searchParams: Promise<{ error?: string; viewing?: string }>;
+  searchParams: Promise<{ error?: string; viewing?: string; flagged?: string }>;
 }) {
   const { id } = await params;
-  const { error: queryError, viewing } = await searchParams;
+  const { error: queryError, viewing, flagged } = await searchParams;
   const supabase = await createClient();
 
   const { data: property, error } = await supabase
@@ -92,6 +92,30 @@ export default async function PropertyPage({
   }
   const fit = calculateFitScore(property, prefs);
 
+  // Trust flags (PRD Sec 22): public counts by reason.
+  const { data: flags } = await supabase
+    .from("listing_reports")
+    .select("reason")
+    .eq("property_id", id);
+  const flagCounts: Record<string, number> = {};
+  for (const f of flags ?? []) {
+    flagCounts[f.reason] = (flagCounts[f.reason] ?? 0) + 1;
+  }
+  const totalFlags = Object.values(flagCounts).reduce((a, b) => a + b, 0);
+
+  // Ownership + viewing requests (owners see requests for their properties).
+  const isOwner = !!user && property.owner_id === user.id;
+  let ownerRequests: { id: string; message: string | null; status: string; created_at: string }[] = [];
+  if (isOwner) {
+    const { data } = await supabase
+      .from("viewing_requests")
+      .select("id, message, status, created_at")
+      .eq("property_id", id)
+      .order("created_at", { ascending: false })
+      .limit(20);
+    ownerRequests = data ?? [];
+  }
+
   // Save state + share text (PRD Sec 24: share includes score + warnings).
   let isSaved = false;
   if (user) {
@@ -159,6 +183,19 @@ export default async function PropertyPage({
       {viewing === "requested" && (
         <p className="rounded bg-green-50 p-2 text-sm text-green-800">
           Viewing requested. The owner/agent will contact you.
+        </p>
+      )}
+      {flagged === "1" && (
+        <p className="rounded bg-green-50 p-2 text-sm text-green-800">
+          Thanks — your flag is now visible to other renters.
+        </p>
+      )}
+      {totalFlags > 0 && (
+        <p className="rounded bg-amber-50 p-2 text-sm text-amber-800">
+          ⚠ {totalFlags} user flag{totalFlags > 1 ? "s" : ""}:{" "}
+          {Object.entries(flagCounts)
+            .map(([reason, n]) => `${n}× ${reason}`)
+            .join(" · ")}
         </p>
       )}
       <div className="rounded-2xl bg-white p-6 shadow-sm">
@@ -246,12 +283,20 @@ export default async function PropertyPage({
           <p className="text-xs font-semibold text-zinc-500">
             Section 4 — What People Say ({reportList.length})
           </p>
-          <Link
-            href={`/properties/${id}/report`}
-            className="rounded-full bg-zinc-900 px-3 py-1 text-xs text-white"
-          >
-            Report what you found
-          </Link>
+          <div className="flex gap-2">
+            <Link
+              href={`/properties/${id}/report`}
+              className="rounded-full bg-zinc-900 px-3 py-1 text-xs text-white"
+            >
+              Report what you found
+            </Link>
+            <Link
+              href={`/properties/${id}/flag`}
+              className="rounded-full border px-3 py-1 text-xs hover:bg-zinc-100"
+            >
+              Flag listing
+            </Link>
+          </div>
         </div>
         {hasConflict && (
           <p className="mt-2 rounded bg-amber-50 p-2 text-sm text-amber-800">
@@ -330,6 +375,49 @@ export default async function PropertyPage({
           </Link>
         )}
       </div>
+
+      {isOwner && (
+        <div className="rounded-2xl bg-white p-6 shadow-sm">
+          <p className="text-xs font-semibold text-zinc-500">
+            Owner controls
+          </p>
+          <form action={updateAvailability.bind(null, id)} className="mt-2 flex gap-2">
+            <select
+              name="availability"
+              defaultValue={String(property.availability ?? "Available")}
+              className="rounded border border-zinc-300 bg-white px-3 py-2 text-sm text-zinc-900"
+            >
+              <option value="Available">Available</option>
+              <option value="Available soon">Available soon</option>
+              <option value="No longer available">No longer available</option>
+            </select>
+            <button
+              type="submit"
+              className="rounded-full border px-4 py-2 text-sm hover:bg-zinc-100"
+            >
+              Update
+            </button>
+          </form>
+          <p className="mt-1 text-xs text-zinc-500">
+            “No longer available” keeps the page visible for area research (PRD Sec 23).
+          </p>
+          <h3 className="mt-4 text-sm font-semibold">
+            Viewing requests ({ownerRequests.length})
+          </h3>
+          {ownerRequests.length === 0 ? (
+            <p className="mt-1 text-sm text-zinc-600">No requests yet.</p>
+          ) : (
+            <ul className="mt-2 space-y-1 text-sm text-zinc-600">
+              {ownerRequests.map((r) => (
+                <li key={r.id} className="rounded border p-2">
+                  {r.message ?? "(no message)"} · {r.status} ·{" "}
+                  {new Date(r.created_at).toLocaleDateString()}
+                </li>
+              ))}
+            </ul>
+          )}
+        </div>
+      )}
     </div>
   );
 }

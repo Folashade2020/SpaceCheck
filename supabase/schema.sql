@@ -96,6 +96,19 @@ create table if not exists public.preferences (
   updated_at timestamptz not null default now()
 );
 
+-- 7. listing_reports: suspicious-listing flags (trust polish, PRD Sec 22)
+create table if not exists public.listing_reports (
+  id uuid primary key default gen_random_uuid(),
+  property_id uuid not null references public.properties(id) on delete cascade,
+  reporter_id uuid references public.profiles(id) on delete set null,
+  reason text not null check (reason in (
+    'Fake property', 'Wrong location', 'Already rented',
+    'Misleading info', 'Suspicious agent', 'Duplicate'
+  )),
+  comment text,
+  created_at timestamptz not null default now()
+);
+
 -- Public safe view: excludes exact_address / exact_lat / exact_lng
 create or replace view public.property_public as
 select
@@ -116,6 +129,7 @@ alter table public.reports enable row level security;
 alter table public.saves enable row level security;
 alter table public.viewing_requests enable row level security;
 alter table public.preferences enable row level security;
+alter table public.listing_reports enable row level security;
 
 -- Policies (drop first so re-runnable)
 drop policy if exists "Users manage own profile" on public.profiles;
@@ -146,6 +160,24 @@ drop policy if exists "Users manage own viewing requests" on public.viewing_requ
 create policy "Users manage own viewing requests" on public.viewing_requests
   for all using (auth.uid() = user_id) with check (auth.uid() = user_id);
 
+drop policy if exists "Owners can view requests for own properties" on public.viewing_requests;
+create policy "Owners can view requests for own properties" on public.viewing_requests
+  for select using (
+    exists (
+      select 1 from public.properties
+      where properties.id = viewing_requests.property_id
+        and properties.owner_id = auth.uid()
+    )
+  );
+
+drop policy if exists "Public can read listing reports" on public.listing_reports;
+create policy "Public can read listing reports" on public.listing_reports
+  for select using (true);
+
+drop policy if exists "Authenticated can flag listings" on public.listing_reports;
+create policy "Authenticated can flag listings" on public.listing_reports
+  for insert to authenticated with check (true);
+
 drop policy if exists "Users manage own preferences" on public.preferences;
 create policy "Users manage own preferences" on public.preferences
   for all using (auth.uid() = user_id) with check (auth.uid() = user_id);
@@ -153,3 +185,4 @@ create policy "Users manage own preferences" on public.preferences
 -- Grants for the public view (so /search works without login)
 grant select on public.property_public to anon, authenticated;
 grant select on public.reports to anon, authenticated;
+grant select on public.listing_reports to anon, authenticated;

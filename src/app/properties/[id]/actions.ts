@@ -71,3 +71,39 @@ export async function requestViewing(propertyId: string, formData: FormData) {
   revalidatePath("/dashboard");
   redirect(`/properties/${propertyId}?viewing=requested`);
 }
+
+export async function updateAvailability(propertyId: string, formData: FormData) {
+  const supabase = await createClient();
+  const {
+    data: { user },
+  } = await supabase.auth.getUser();
+
+  if (!user) {
+    redirect("/login");
+  }
+
+  const availability = String(formData.get("availability") ?? "");
+  const allowed = ["Available", "Available soon", "No longer available"];
+  if (!allowed.includes(availability)) {
+    redirect(`/properties/${propertyId}?error=Invalid+availability`);
+  }
+
+  // RLS "Owners manage own properties" enforces ownership.
+  const { error } = await supabase
+    .from("properties")
+    .update({
+      availability,
+      is_available: availability !== "No longer available",
+    })
+    .eq("id", propertyId);
+
+  if (error) {
+    redirect(
+      `/properties/${propertyId}?error=${encodeURIComponent(error.message)}`
+    );
+  }
+
+  revalidatePath(`/properties/${propertyId}`);
+  revalidatePath("/search");
+  redirect(`/properties/${propertyId}`);
+}
