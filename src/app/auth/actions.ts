@@ -17,6 +17,10 @@ export async function signup(formData: FormData) {
     redirect("/signup?error=Email and password are required");
   }
 
+  if (formData.get("ndpa_consent") !== "on") {
+    redirect("/signup?error=Please accept the NDPA privacy notice to continue");
+  }
+
   const { data, error } = await supabase.auth.signUp({
     email,
     password,

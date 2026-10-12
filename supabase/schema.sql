@@ -81,7 +81,8 @@ create table if not exists public.viewing_requests (
   user_id uuid not null references public.profiles(id) on delete cascade,
   property_id uuid not null references public.properties(id) on delete cascade,
   message text,
-  status text not null default 'pending',
+  status text not null default 'pending'
+    check (status in ('pending', 'confirmed', 'declined')),
   created_at timestamptz not null default now()
 );
 
@@ -152,6 +153,10 @@ drop policy if exists "Authenticated can create reports" on public.reports;
 create policy "Authenticated can create reports" on public.reports
   for insert to authenticated with check (true);
 
+drop policy if exists "Users can anonymize own reports" on public.reports;
+create policy "Users can anonymize own reports" on public.reports
+  for update using (auth.uid() = reporter_id) with check (reporter_id is null);
+
 drop policy if exists "Users manage own saves" on public.saves;
 create policy "Users manage own saves" on public.saves
   for all using (auth.uid() = user_id) with check (auth.uid() = user_id);
@@ -170,6 +175,33 @@ create policy "Owners can view requests for own properties" on public.viewing_re
     )
   );
 
+drop policy if exists "Owners can update requests for own properties" on public.viewing_requests;
+create policy "Owners can update requests for own properties" on public.viewing_requests
+  for update using (
+    exists (
+      select 1 from public.properties
+      where properties.id = viewing_requests.property_id
+        and properties.owner_id = auth.uid()
+    )
+  ) with check (
+    exists (
+      select 1 from public.properties
+      where properties.id = viewing_requests.property_id
+        and properties.owner_id = auth.uid()
+    )
+  );
+
+drop policy if exists "Confirmed renters can view private contact fields" on public.properties;
+create policy "Confirmed renters can view private contact fields" on public.properties
+  for select using (
+    exists (
+      select 1 from public.viewing_requests
+      where viewing_requests.property_id = properties.id
+        and viewing_requests.user_id = auth.uid()
+        and viewing_requests.status = 'confirmed'
+    )
+  );
+
 drop policy if exists "Public can read listing reports" on public.listing_reports;
 create policy "Public can read listing reports" on public.listing_reports
   for select using (true);
@@ -177,6 +209,10 @@ create policy "Public can read listing reports" on public.listing_reports
 drop policy if exists "Authenticated can flag listings" on public.listing_reports;
 create policy "Authenticated can flag listings" on public.listing_reports
   for insert to authenticated with check (true);
+
+drop policy if exists "Users can delete own flags" on public.listing_reports;
+create policy "Users can delete own flags" on public.listing_reports
+  for delete using (auth.uid() = reporter_id);
 
 drop policy if exists "Users manage own preferences" on public.preferences;
 create policy "Users manage own preferences" on public.preferences

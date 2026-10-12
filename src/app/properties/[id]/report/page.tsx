@@ -1,6 +1,7 @@
 import { redirect } from "next/navigation";
 import { createClient } from "@/lib/supabase/server";
 import { submitReport } from "./actions";
+import NdpaConsent from "@/components/NdpaConsent";
 
 const inputClass =
   "mt-1 w-full rounded border border-zinc-300 bg-white px-3 py-2 text-zinc-900 placeholder:text-zinc-400 focus:outline-none focus:ring-2 focus:ring-zinc-900";
@@ -104,6 +105,8 @@ export default async function ReportPage({
             className={inputClass}
           />
         </label>
+
+        <NdpaConsent />
 
         <button
           type="submit"

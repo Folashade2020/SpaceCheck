@@ -259,6 +259,7 @@ export default async function DashboardPage() {
         <Link href="/onboarding" style={{ color: "#047857", fontWeight: 600 }}>Change role</Link>
         <Link href="/preferences" style={{ color: "#047857", fontWeight: 600 }}>Edit preferences</Link>
         <Link href="/submit" style={{ color: "#047857", fontWeight: 600 }}>List a property</Link>
+        <Link href="/settings" style={{ color: "#047857", fontWeight: 600 }}>Settings & privacy</Link>
       </div>
     </div>
   );

@@ -36,6 +36,10 @@ export async function createProperty(formData: FormData) {
     redirect("/submit?error=Property+type%2C+bedrooms%2C+rent%2C+district+and+neighborhood+are+required");
   }
 
+  if (formData.get("ndpa_consent") !== "on") {
+    redirect("/submit?error=Please accept the NDPA privacy notice to continue");
+  }
+
   const living: Record<string, string | null> = {};
   for (const key of ["electricity", "flood", "water", "road_access", "network_quality"]) {
     const v = str(key);

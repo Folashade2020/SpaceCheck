@@ -4,6 +4,7 @@ import { useRef, useState } from "react";
 import { createProperty } from "./actions";
 import { DISTRICTS, PROPERTY_TYPES } from "@/lib/locations";
 import { LIVING_FIELDS } from "@/lib/options";
+import NdpaConsent from "@/components/NdpaConsent";
 
 const STEPS = ["Basics", "Location", "Living conditions", "Contact & photos"];
 
@@ -276,6 +277,7 @@ export default function SubmitWizard() {
                 …or photo URLs (one per line)
                 <textarea name="photo_urls" rows={2} placeholder="https://…" className="input" />
               </label>
+              <NdpaConsent />
             </fieldset>
           )}
         </div>

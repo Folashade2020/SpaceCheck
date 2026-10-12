@@ -2,8 +2,9 @@ import { createClient } from "@/lib/supabase/server";
 import { notFound } from "next/navigation";
 import Link from "next/link";
 import { calculateFitScore, type PriorityKey } from "@/lib/fitScore";
-import { saveProperty, unsaveProperty, requestViewing, updateAvailability } from "./actions";
+import { saveProperty, unsaveProperty, requestViewing, updateAvailability, confirmViewingRequest, declineViewingRequest } from "./actions";
 import ShareButton from "./share-button";
+import NdpaConsent from "@/components/NdpaConsent";
 import { EvidenceBadge, ScoreRing } from "@/components/ui";
 
 function display(value: unknown) {
@@ -125,6 +126,39 @@ export default async function PropertyPage({
       .order("created_at", { ascending: false })
       .limit(20);
     ownerRequests = data ?? [];
+  }
+
+  // Privacy guard (NDPA): exact address + phone come from the base table,
+  // which RLS restricts to the owner and confirmed renters only.
+  // Everyone else sees the public view (no exact address, no phone).
+  let privateContact: { exact_address: string | null; contact_phone: string | null } = {
+    exact_address: null,
+    contact_phone: null,
+  };
+  let myViewingStatus: string | null = null;
+  if (user && !isOwner) {
+    const { data: mine } = await supabase
+      .from("viewing_requests")
+      .select("status")
+      .eq("property_id", id)
+      .eq("user_id", user.id)
+      .order("created_at", { ascending: false })
+      .limit(1)
+      .maybeSingle();
+    myViewingStatus = mine?.status ?? null;
+  }
+  if (isOwner || myViewingStatus === "confirmed") {
+    const { data: priv } = await supabase
+      .from("properties")
+      .select("exact_address, contact_phone")
+      .eq("id", id)
+      .maybeSingle();
+    if (priv) {
+      privateContact = {
+        exact_address: priv.exact_address ?? null,
+        contact_phone: priv.contact_phone ?? null,
+      };
+    }
   }
 
   // Save state + share text (PRD Sec 24: share includes score + warnings).
@@ -396,14 +430,31 @@ export default async function PropertyPage({
         </p>
         <h2 style={{ fontWeight: 800, fontSize: "1rem", marginTop: "0.7rem" }}>Contact & viewing</h2>
         <p style={{ marginTop: "0.35rem", fontSize: "0.87rem", color: "#57534e" }}>
-          Contact: {display(property.contact_name)} · Phone/address are shared only when the owner accepts your request.
+          Contact: {display(property.contact_name)}
         </p>
+        {privateContact.contact_phone || privateContact.exact_address ? (
+          <div style={{ marginTop: "0.5rem", background: "#ecfdf5", border: "1px solid #a7f3d0", borderRadius: 10, padding: "0.6rem 0.8rem", fontSize: "0.85rem" }}>
+            <p style={{ fontWeight: 700, color: "#065f46" }}>🔓 Shared with you {isOwner ? "(you listed this property)" : "(viewing confirmed)"}</p>
+            {privateContact.contact_phone && <p>Phone: {display(privateContact.contact_phone)}</p>}
+            {privateContact.exact_address && <p>Exact address: {display(privateContact.exact_address)}</p>}
+          </div>
+        ) : (
+          <p style={{ marginTop: "0.35rem", fontSize: "0.83rem", color: "#78716c" }}>
+            Phone and exact street address stay private until the owner confirms your viewing request (NDPA).
+          </p>
+        )}
+        {myViewingStatus && !isOwner && (
+          <p style={{ marginTop: "0.4rem", fontSize: "0.83rem", fontWeight: 700, color: myViewingStatus === "confirmed" ? "#065f46" : "#92400e" }}>
+            Your request: {myViewingStatus === "confirmed" ? "Confirmed ✓" : myViewingStatus === "declined" ? "Declined" : "Pending agent confirmation"}
+          </p>
+        )}
         {user ? (
           <form action={requestViewing.bind(null, id)} style={{ marginTop: "0.7rem", display: "flex", flexDirection: "column", gap: "0.6rem" }}>
             <label className="label">
               Message to owner/agent (optional)
               <textarea name="message" rows={2} placeholder="e.g. Free to inspect Saturday morning" className="input" />
             </label>
+            <NdpaConsent />
             <div><button type="submit" className="btn-primary">Request a Viewing</button></div>
           </form>
         ) : (
@@ -433,7 +484,17 @@ export default async function PropertyPage({
             <ul style={{ marginTop: "0.4rem", display: "flex", flexDirection: "column", gap: "0.4rem", fontSize: "0.87rem" }}>
               {ownerRequests.map((r) => (
                 <li key={r.id} style={{ border: "1px solid #e7e5e4", borderRadius: 8, padding: "0.5rem 0.7rem" }}>
-                  {r.message ?? "(no message)"} · {r.status} · {new Date(r.created_at).toLocaleDateString()}
+                  <p>{r.message ?? "(no message)"} · {r.status} · {new Date(r.created_at).toLocaleDateString()}</p>
+                  {r.status === "pending" && (
+                    <div style={{ marginTop: "0.4rem", display: "flex", gap: "0.4rem" }}>
+                      <form action={confirmViewingRequest.bind(null, id, r.id)}>
+                        <button type="submit" className="btn-primary btn-sm">Confirm</button>
+                      </form>
+                      <form action={declineViewingRequest.bind(null, id, r.id)}>
+                        <button type="submit" className="btn-secondary btn-sm">Decline</button>
+                      </form>
+                    </div>
+                  )}
                 </li>
               ))}
             </ul>

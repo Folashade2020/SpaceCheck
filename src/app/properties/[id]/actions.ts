@@ -52,6 +52,10 @@ export async function requestViewing(propertyId: string, formData: FormData) {
     redirect("/login");
   }
 
+  if (formData.get("ndpa_consent") !== "on") {
+    redirect(`/properties/${propertyId}?error=${encodeURIComponent("Please accept the NDPA privacy notice to continue")}`);
+  }
+
   const message = String(formData.get("message") ?? "").trim() || null;
 
   const { error } = await supabase.from("viewing_requests").insert({
@@ -106,4 +110,47 @@ export async function updateAvailability(propertyId: string, formData: FormData)
   revalidatePath(`/properties/${propertyId}`);
   revalidatePath("/search");
   redirect(`/properties/${propertyId}`);
+}
+
+async function setRequestStatus(propertyId: string, requestId: string, status: "confirmed" | "declined") {
+  const supabase = await createClient();
+  const {
+    data: { user },
+  } = await supabase.auth.getUser();
+
+  if (!user) {
+    redirect("/login");
+  }
+
+  // Ownership is enforced twice: app-level check + RLS policy.
+  const { data: property } = await supabase
+    .from("properties")
+    .select("id, owner_id")
+    .eq("id", propertyId)
+    .single();
+
+  if (!property || property.owner_id !== user.id) {
+    redirect(`/properties/${propertyId}?error=Only+the+lister+can+do+that`);
+  }
+
+  const { error } = await supabase
+    .from("viewing_requests")
+    .update({ status })
+    .eq("id", requestId)
+    .eq("property_id", propertyId);
+
+  if (error) {
+    redirect(`/properties/${propertyId}?error=${encodeURIComponent(error.message)}`);
+  }
+
+  revalidatePath(`/properties/${propertyId}`);
+  redirect(`/properties/${propertyId}`);
+}
+
+export async function confirmViewingRequest(propertyId: string, requestId: string) {
+  await setRequestStatus(propertyId, requestId, "confirmed");
+}
+
+export async function declineViewingRequest(propertyId: string, requestId: string) {
+  await setRequestStatus(propertyId, requestId, "declined");
 }

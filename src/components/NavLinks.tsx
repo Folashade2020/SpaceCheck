@@ -9,6 +9,7 @@ const LINKS = [
   { href: "/submit", label: "List property" },
   { href: "/preferences", label: "Preferences" },
   { href: "/dashboard", label: "Dashboard" },
+  { href: "/settings", label: "Settings" },
 ];
 
 function isActive(pathname: string, href: string) {

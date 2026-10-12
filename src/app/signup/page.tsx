@@ -1,6 +1,7 @@
 import Link from "next/link";
 import { signup } from "@/app/auth/actions";
 import { BrandMark } from "@/components/ui";
+import NdpaConsent from "@/components/NdpaConsent";
 
 export default async function SignupPage({
   searchParams,
@@ -40,6 +41,7 @@ export default async function SignupPage({
             <option value="community">Community — lived in / visited</option>
           </select>
         </label>
+        <NdpaConsent />
         <button type="submit" className="btn-primary">Sign up free</button>
       </form>
       <p style={{ marginTop: "1rem", fontSize: "0.85rem", color: "#57534e" }}>

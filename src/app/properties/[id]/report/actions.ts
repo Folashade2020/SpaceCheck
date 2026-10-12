@@ -17,6 +17,10 @@ export async function submitReport(propertyId: string, formData: FormData) {
     redirect("/login");
   }
 
+  if (formData.get("ndpa_consent") !== "on") {
+    redirect(`/properties/${propertyId}/report?error=${encodeURIComponent("Please accept the NDPA privacy notice to continue")}`);
+  }
+
   const str = (key: string) => {
     const v = String(formData.get(key) ?? "").trim();
     return v === "" ? null : v;
