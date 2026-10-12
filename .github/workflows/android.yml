@@ -8,6 +8,9 @@ on:
 permissions:
   contents: write
 
+env:
+  APP_URL: ${{ secrets.APP_URL }}
+
 jobs:
   build:
     runs-on: ubuntu-latest
