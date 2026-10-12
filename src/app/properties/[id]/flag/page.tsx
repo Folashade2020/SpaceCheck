@@ -37,7 +37,7 @@ export default async function FlagPage({
       <div className="rounded-2xl bg-white p-6 shadow-sm">
         <h1 className="text-2xl font-bold text-zinc-900">Report listing</h1>
         <p className="mt-1 text-sm text-zinc-600">
-          Flags are shown publicly as counts. Listings are never auto-deleted —
+          Flags are shown publicly as counts. Listings are never auto-deleted -
           renters decide with transparency.
         </p>
         {error && (
@@ -54,7 +54,7 @@ export default async function FlagPage({
         <label className="block text-sm font-medium text-zinc-900">
           Reason
           <select name="reason" required defaultValue="" className={inputClass}>
-            <option value="">Select…</option>
+            <option value="">Select...</option>
             {REASONS.map((r) => (
               <option key={r} value={r}>
                 {r}

@@ -3,9 +3,16 @@ import { createClient } from "@/lib/supabase/server";
 import { savePreferences } from "./actions";
 import { PRIORITY_LABELS } from "@/lib/fitScore";
 import { PROPERTY_TYPES } from "@/lib/locations";
+import { BrandMark } from "@/components/ui";
 
-const inputClass =
-  "mt-1 w-full rounded border border-zinc-300 bg-white px-3 py-2 text-zinc-900 placeholder:text-zinc-400 focus:outline-none focus:ring-2 focus:ring-zinc-900";
+const PRIORITY_STYLE: Record<string, { tile: string; dot: string }> = {
+  electricity: { tile: "peer-checked:border-amber-500 peer-checked:bg-amber-50", dot: "#f59e0b" },
+  flood: { tile: "peer-checked:border-sky-500 peer-checked:bg-sky-50", dot: "#0ea5e9" },
+  water: { tile: "peer-checked:border-cyan-500 peer-checked:bg-cyan-50", dot: "#06b6d4" },
+  road_access: { tile: "peer-checked:border-orange-500 peer-checked:bg-orange-50", dot: "#f97316" },
+  network_quality: { tile: "peer-checked:border-violet-500 peer-checked:bg-violet-50", dot: "#8b5cf6" },
+  security: { tile: "peer-checked:border-emerald-500 peer-checked:bg-emerald-50", dot: "#00A86B" },
+};
 
 export default async function PreferencesPage({
   searchParams,
@@ -33,62 +40,52 @@ export default async function PreferencesPage({
     : [];
 
   return (
-    <div className="mx-auto max-w-2xl space-y-4">
-      <div className="rounded-2xl bg-white p-6 shadow-sm">
-        <h1 className="text-2xl font-bold text-zinc-900">
+    <div style={{ maxWidth: 640, margin: "0 auto", display: "flex", flexDirection: "column", gap: "1rem" }}>
+      <section className="card" style={{ padding: "1.6rem", background: "#0F172A", borderColor: "#0F172A", color: "#fff" }}>
+        <div style={{ display: "flex", alignItems: "center", gap: "0.6rem" }}>
+          <BrandMark />
+          <p style={{ fontSize: "0.75rem", fontWeight: 800, color: "#A7F3D0", textTransform: "uppercase", letterSpacing: "0.08em" }}>
+            Renter onboarding
+          </p>
+        </div>
+        <h1 style={{ marginTop: "0.5rem", fontSize: "1.6rem", fontWeight: 800, letterSpacing: "-0.01em" }}>
           What matters to you?
         </h1>
-        <p className="mt-1 text-sm text-zinc-600">
-          Short onboarding. Used only to rank <em>Best Match for
-          You</em> and compute your personal Fit Score — never shared.
+        <p style={{ marginTop: "0.35rem", fontSize: "0.9rem", color: "#CBD5E1", lineHeight: 1.6 }}>
+          Used only to rank <em>Best Match for You</em> and compute your personal Fit Score - never shared.
         </p>
         {error && (
-          <p className="mt-4 rounded bg-red-50 p-2 text-sm text-red-700">
+          <p style={{ marginTop: "0.8rem", borderRadius: 10, background: "#fef2f2", color: "#b91c1c", padding: "0.6rem 0.8rem", fontSize: "0.85rem" }}>
             {error}
           </p>
         )}
-      </div>
+      </section>
 
-      <form
-        action={savePreferences}
-        className="space-y-5 rounded-2xl bg-white p-6 shadow-sm"
-      >
-        <label className="block text-sm font-medium text-zinc-900">
+      <form action={savePreferences} className="card" style={{ padding: "1.4rem", display: "flex", flexDirection: "column", gap: "1rem" }}>
+        <label className="label">
           Where are you looking? (comma separated)
           <input
             name="areas"
             placeholder="e.g. Opebi, Allen Avenue, Lekki Phase 1"
             defaultValue={(prefs?.areas ?? []).join(", ")}
-            className={inputClass}
+            className="input"
           />
         </label>
 
-        <div className="grid grid-cols-2 gap-3">
-          <label className="block text-sm font-medium text-zinc-900">
+        <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: "0.7rem" }}>
+          <label className="label">
             Min budget (₦)
-            <input
-              name="budget_min"
-              type="number"
-              placeholder="500000"
-              defaultValue={prefs?.budget_min ?? ""}
-              className={inputClass}
-            />
+            <input name="budget_min" type="number" placeholder="500000" defaultValue={prefs?.budget_min ?? ""} className="input" />
           </label>
-          <label className="block text-sm font-medium text-zinc-900">
+          <label className="label">
             Max budget (₦)
-            <input
-              name="budget_max"
-              type="number"
-              placeholder="2000000"
-              defaultValue={prefs?.budget_max ?? ""}
-              className={inputClass}
-            />
+            <input name="budget_max" type="number" placeholder="2000000" defaultValue={prefs?.budget_max ?? ""} className="input" />
           </label>
         </div>
 
-        <label className="block text-sm font-medium text-zinc-900">
+        <label className="label">
           Property type
-          <select name="property_type" defaultValue={prefs?.property_type ?? ""} className={inputClass}>
+          <select name="property_type" defaultValue={prefs?.property_type ?? ""} className="input">
             <option value="">No preference</option>
             {PROPERTY_TYPES.map((t) => (
               <option key={t} value={t}>{t}</option>
@@ -97,31 +94,32 @@ export default async function PreferencesPage({
         </label>
 
         <fieldset>
-          <legend className="text-sm font-medium text-zinc-900">
-            What matters most? (pick up to 6)
-          </legend>
-          <div className="mt-2 grid grid-cols-2 gap-2">
-            {Object.entries(PRIORITY_LABELS).map(([key, label]) => (
-              <label
-                key={key}
-                className="flex items-center gap-2 rounded border border-zinc-200 px-3 py-2 text-sm text-zinc-900"
-              >
-                <input
-                  type="checkbox"
-                  name={`prio_${key}`}
-                  defaultChecked={selected.includes(key)}
-                  className="h-4 w-4 accent-zinc-900"
-                />
-                {label}
-              </label>
-            ))}
+          <legend className="label">What matters most? (pick up to 6)</legend>
+          <div style={{ marginTop: "0.5rem", display: "grid", gridTemplateColumns: "1fr 1fr", gap: "0.55rem" }}>
+            {Object.entries(PRIORITY_LABELS).map(([key, label]) => {
+              const style = PRIORITY_STYLE[key] ?? PRIORITY_STYLE.security;
+              return (
+                <label key={key} style={{ cursor: "pointer" }}>
+                  <input
+                    type="checkbox"
+                    name={`prio_${key}`}
+                    defaultChecked={selected.includes(key)}
+                    className="peer sr-only"
+                  />
+                  <span
+                    className={`flex items-center gap-2 rounded-xl border border-slate-200 bg-white px-3 py-2.5 text-sm font-semibold text-slate-800 transition ${style.tile}`}
+                    style={{ display: "flex" }}
+                  >
+                    <span aria-hidden style={{ width: 12, height: 12, borderRadius: "50%", flexShrink: 0, background: style.dot }} />
+                    {label}
+                  </span>
+                </label>
+              );
+            })}
           </div>
         </fieldset>
 
-        <button
-          type="submit"
-          className="w-full rounded-full bg-zinc-900 py-2.5 text-white"
-        >
+        <button type="submit" className="btn-primary">
           Save and see Best Match
         </button>
       </form>

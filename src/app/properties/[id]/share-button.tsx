@@ -11,7 +11,7 @@ export default function ShareButton({ text }: { text: string }) {
         await navigator.share({ text });
         return;
       } catch {
-        // user cancelled — fall through to clipboard
+        // user cancelled - fall through to clipboard
       }
     }
     try {

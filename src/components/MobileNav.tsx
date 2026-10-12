@@ -1,4 +1,4 @@
-﻿"use client";
+"use client";
 
 import { useState } from "react";
 import { logout } from "@/app/auth/actions";
@@ -22,7 +22,7 @@ export default function MobileNav({ loggedIn }: { loggedIn: boolean }) {
           background: "#fff",
         }}
       >
-        {open ? "âœ•" : "â˜°"}
+        {open ? "x" : "Menu"}
       </button>
       {open && (
         <div

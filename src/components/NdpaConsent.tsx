@@ -1,4 +1,4 @@
-﻿export default function NdpaConsent() {
+export default function NdpaConsent() {
   return (
     <label
       style={{
@@ -23,7 +23,7 @@
         style={{ marginTop: "0.2rem", width: 16, height: 16, accentColor: "#00a86b", flexShrink: 0 }}
       />
       <span>
-        ðŸ”’ SpaceCheck protects your data under the Nigeria Data Protection Act
+         SpaceCheck protects your data under the Nigeria Data Protection Act
         (NDPA). Your information is used strictly to facilitate viewing
         requests and property intelligence. We never publicly reveal your exact
         street address or sell your contact details.

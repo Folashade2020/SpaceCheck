@@ -1,4 +1,4 @@
-﻿import Link from "next/link";
+import Link from "next/link";
 import MapView from "@/components/MapView";
 import { createClient } from "@/lib/supabase/server";
 import { calculateFitScore, type PriorityKey } from "@/lib/fitScore";
@@ -15,7 +15,7 @@ function display(value: string | number | null | undefined) {
 
 function naira(n: number | null | undefined) {
   if (n === null || n === undefined || !Number.isFinite(Number(n))) return "Not provided";
-  return `â‚¦${Number(n).toLocaleString("en-NG")}`;
+  return `₦${Number(n).toLocaleString("en-NG")}`;
 }
 
 export default async function SearchPage({
@@ -99,7 +99,7 @@ export default async function SearchPage({
     const s = sp.toString();
     return `/search${s ? `?${s}` : ""}`;
   };
-  const activeFilters = [query && `â€œ${query}â€`, typeF, bedsF ? `${bedsF} bed` : "", maxF ? `â‰¤ â‚¦${maxF.toLocaleString("en-NG")}` : ""].filter(Boolean);
+  const activeFilters = [query && `"${query}"`, typeF, bedsF ? `${bedsF} bed` : "", maxF ? `<= ₦${maxF.toLocaleString("en-NG")}` : ""].filter(Boolean);
 
   return (
     <div style={{ display: "flex", flexDirection: "column", gap: "1rem" }}>
@@ -109,7 +109,7 @@ export default async function SearchPage({
         </h1>
         <p style={{ fontSize: "0.87rem", color: "#475569" }}>
           {ranked.length} home{ranked.length === 1 ? "" : "s"}
-          {activeFilters.length > 0 ? <> Â· {activeFilters.join(" Â· ")} (<Link href="/search" style={{ color: "#00a86b", fontWeight: 600 }}>clear all</Link>)</> : " Â· all areas"}
+          {activeFilters.length > 0 ? <> · {activeFilters.join(" · ")} (<Link href="/search" style={{ color: "#00a86b", fontWeight: 600 }}>clear all</Link>)</> : " · all areas"}
         </p>
       </div>
 
@@ -118,7 +118,7 @@ export default async function SearchPage({
         {isMap && <input type="hidden" name="view" value="map" />}
         <label style={{ flex: "2 1 180px", fontSize: "0.75rem", fontWeight: 700, color: "#475569" }}>
           LOCATION OR ESTATE
-          <input name="q" defaultValue={query} placeholder="Opebi, Sangotedo, estateâ€¦" aria-label="Location" className="input" />
+          <input name="q" defaultValue={query} placeholder="Opebi, Sangotedo, estate..." aria-label="Location" className="input" />
         </label>
         <label style={{ flex: "1 1 140px", fontSize: "0.75rem", fontWeight: 700, color: "#475569" }}>
           TYPE
@@ -135,7 +135,7 @@ export default async function SearchPage({
           </select>
         </label>
         <label style={{ flex: "1 1 130px", fontSize: "0.75rem", fontWeight: 700, color: "#475569" }}>
-          MAX / YEAR (â‚¦)
+          MAX / YEAR (₦)
           <input name="max" type="number" defaultValue={maxF ?? ""} placeholder="e.g. 2000000" className="input" />
         </label>
         <label style={{ flex: "0 1 130px", fontSize: "0.75rem", fontWeight: 700, color: "#475569" }}>
@@ -152,7 +152,7 @@ export default async function SearchPage({
       <div style={{ display: "flex", gap: "0.5rem", flexWrap: "wrap", alignItems: "center" }}>
         <Link href={link({ view: "" })} className="btn-secondary btn-sm" style={!isMap ? { background: "#1e293b", color: "#fff", borderColor: "#1e293b" } : undefined}>List</Link>
         <Link href={link({ view: "map" })} className="btn-secondary btn-sm" style={isMap ? { background: "#1e293b", color: "#fff", borderColor: "#1e293b" } : undefined}>Map</Link>
-        {!hasPrefs && <Link href="/preferences" style={{ fontSize: "0.83rem", fontWeight: 600, color: "#00a86b" }}>Set preferences for personal scores â†’</Link>}
+        {!hasPrefs && <Link href="/preferences" style={{ fontSize: "0.83rem", fontWeight: 600, color: "#00a86b" }}>Set preferences for personal scores &gt;</Link>}
         <span style={{ flex: 1 }} />
         <Link href="/submit" className="btn-primary btn-sm">+ List a property</Link>
       </div>
@@ -189,7 +189,7 @@ export default async function SearchPage({
                       <img src={photos[0]} alt="" loading="lazy" style={{ width: "100%", aspectRatio: "4/3", objectFit: "cover", display: "block" }} />
                     ) : (
                       <div style={{ width: "100%", aspectRatio: "4/3", background: "#e2e8f0", display: "flex", alignItems: "center", justifyContent: "center", color: "#94a3b8", fontSize: "0.82rem", fontWeight: 600 }}>
-                        No photo yet â€” verify in person
+                        No photo yet - verify in person
                       </div>
                     )}
                   </Link>
@@ -199,7 +199,7 @@ export default async function SearchPage({
                   {user ? (
                     <form action={(saved ? unsaveProperty : saveProperty).bind(null, p.id)} style={{ position: "absolute", right: 10, top: 8 }}>
                       <button type="submit" aria-label={saved ? "Remove from saved" : "Save this home"} style={{ width: 32, height: 32, borderRadius: "50%", background: "#fff", border: "1px solid #e2e8f0", fontSize: 15, color: saved ? "#00a86b" : "#475569", cursor: "pointer" }}>
-                        {saved ? "â™¥" : "â™¡"}
+                        {saved ? "" : ""}
                       </button>
                     </form>
                   ) : null}
@@ -212,10 +212,10 @@ export default async function SearchPage({
                     {display(p.bedrooms)}-bed {display(p.property_type)}
                   </p>
                   <p style={{ fontSize: "0.83rem", color: "#475569" }}>
-                    {display(p.neighborhood ?? p.general_area)}{p.area ? `, ${display(p.area)}` : ""}{p.estate ? ` Â· ${display(p.estate)}` : ""}
+                    {display(p.neighborhood ?? p.general_area)}{p.area ? `, ${display(p.area)}` : ""}{p.estate ? ` · ${display(p.estate)}` : ""}
                   </p>
                   <p style={{ fontSize: "0.78rem", color: "#64748b" }}>
-                    Flood: {display(p.flood)} Â· Power: {display(p.electricity)}
+                    Flood: {display(p.flood)} · Power: {display(p.electricity)}
                   </p>
                   <p>
                     <EvidenceBadge status={String(p.verification_status ?? "Limited information")} />

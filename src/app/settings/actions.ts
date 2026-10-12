@@ -7,7 +7,7 @@ import { createClient } from "@/lib/supabase/server";
  * NDPA erasure: removes the user's personal data while preserving
  * marketplace integrity (listings stay, anonymized; reports stay, unattributed).
  * Auth identity itself requires the service_role key and must be removed
- * via Supabase Dashboard → Authentication → user → Delete.
+ * via Supabase Dashboard > Authentication > user > Delete.
  */
 export async function deleteMyData() {
   const supabase = await createClient();

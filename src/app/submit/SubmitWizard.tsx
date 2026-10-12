@@ -1,4 +1,4 @@
-﻿"use client";
+"use client";
 
 import { useRef, useState } from "react";
 import { createProperty } from "./actions";
@@ -41,7 +41,7 @@ function ChipGroup({
               cursor: "pointer",
             }}
           >
-            {selected ? "âœ“ " : ""}{opt}
+            {selected ? "+ " : ""}{opt}
           </button>
         );
       })}
@@ -101,7 +101,7 @@ function Dropzone() {
         }}
       >
         <p style={{ fontWeight: 700 }}>Drag & drop photos here, or click to browse</p>
-        <p className="hint">Up to 5 images Â· JPG/PNG Â· 2MB each</p>
+        <p className="hint">Up to 5 images · JPG/PNG · 2MB each</p>
         <input ref={inputRef} type="file" name="photos" accept="image/*" multiple className="sr-only" tabIndex={-1}
           onChange={(e) => add([...(e.target.files ?? [])])} />
       </div>
@@ -113,7 +113,7 @@ function Dropzone() {
               <img src={URL.createObjectURL(f)} alt={`Upload preview ${i + 1}`} style={{ width: "100%", height: 90, objectFit: "cover", borderRadius: 10, border: "1px solid #e2e8f0" }} />
               <button type="button" onClick={() => removeAt(i)} aria-label={`Remove ${f.name}`}
                 style={{ position: "absolute", top: 4, right: 4, width: 24, height: 24, borderRadius: "50%", background: "#1e293b", color: "#fff", fontSize: 12, cursor: "pointer" }}>
-                âœ•
+                x
               </button>
             </div>
           ))}
@@ -165,7 +165,7 @@ export default function SubmitWizard() {
               <label className="label">
                 Property type *
                 <select name="property_type" required className="input" defaultValue="">
-                  <option value="">Selectâ€¦</option>
+                  <option value="">Select...</option>
                   {PROPERTY_TYPES.map((t) => <option key={t} value={t}>{t}</option>)}
                 </select>
               </label>
@@ -180,7 +180,7 @@ export default function SubmitWizard() {
                 </label>
               </div>
               <label className="label">
-                Rent (â‚¦ per year) *
+                Rent (₦ per year) *
                 <input name="rent" type="number" min={1} required placeholder="1500000" className="input" />
               </label>
               <label className="label">
@@ -201,14 +201,14 @@ export default function SubmitWizard() {
                 <label className="label">
                   District *
                   <select name="district" required className="input" defaultValue="">
-                    <option value="">Selectâ€¦</option>
+                    <option value="">Select...</option>
                     {Object.keys(DISTRICTS).map((d) => <option key={d} value={d}>{d}</option>)}
                   </select>
                 </label>
                 <label className="label">
                   Neighbourhood *
                   <select name="neighborhood" required className="input" defaultValue="">
-                    <option value="">Selectâ€¦</option>
+                    <option value="">Select...</option>
                     {Object.entries(DISTRICTS).map(([d, areas]) => (
                       <optgroup key={d} label={d}>
                         {areas.map((a) => <option key={`${d}-${a}`} value={a}>{a}</option>)}
@@ -220,10 +220,10 @@ export default function SubmitWizard() {
               <label className="label">
                 Estate (optional)
                 <input name="estate" placeholder="e.g. Ocean Palm Estate" className="input" />
-                <span className="hint">Public text â€” no exact pin is ever shown.</span>
+                <span className="hint">Public text - no exact pin is ever shown.</span>
               </label>
               <div style={{ background: "#ecfdf5", border: "1px solid #a7f3d0", borderRadius: 10, padding: "0.7rem 0.9rem" }}>
-                <p style={{ fontSize: "0.85rem", fontWeight: 700, color: "#007a4d" }}>ðŸ”’ Privacy promise</p>
+                <p style={{ fontSize: "0.85rem", fontWeight: 700, color: "#007a4d" }}> Privacy promise</p>
                 <label className="label" style={{ marginTop: "0.4rem" }}>
                   Exact street address
                   <input name="exact_address" placeholder="House no / street" className="input" />
@@ -237,7 +237,7 @@ export default function SubmitWizard() {
             <fieldset className="card" style={{ padding: "1.4rem", display: "flex", flexDirection: "column", gap: "0.9rem" }}>
               <legend style={{ fontWeight: 800, fontSize: "1.05rem", padding: "0 0.4rem" }}>Living conditions</legend>
               <p style={{ fontSize: "0.85rem", color: "#475569" }}>
-                Tap what applies â€” or skip anything you haven&apos;t observed. Skipped fields show as â€œNot providedâ€, never guessed.
+                Tap what applies - or skip anything you haven&apos;t observed. Skipped fields show as &quot;Not provided&quot;, never guessed.
               </p>
               {LIVING_FIELDS.map((f) => (
                 <div key={f.key}>
@@ -266,7 +266,7 @@ export default function SubmitWizard() {
                 </label>
                 <label className="label">
                   Contact phone
-                  <input name="contact_phone" placeholder="080â€¦" className="input" />
+                  <input name="contact_phone" placeholder="080..." className="input" />
                 </label>
               </div>
               <div>
@@ -274,8 +274,8 @@ export default function SubmitWizard() {
                 <Dropzone />
               </div>
               <label className="label">
-                â€¦or photo URLs (one per line)
-                <textarea name="photo_urls" rows={2} placeholder="https://â€¦" className="input" />
+                ...or photo URLs (one per line)
+                <textarea name="photo_urls" rows={2} placeholder="https://..." className="input" />
               </label>
               <NdpaConsent />
             </fieldset>
@@ -285,12 +285,12 @@ export default function SubmitWizard() {
         <div style={{ marginTop: "1rem", display: "flex", justifyContent: "space-between", gap: "0.6rem" }}>
           {step > 0 ? (
             <button type="button" onClick={() => setStep((s) => s - 1)} className="btn-secondary">
-              â† Back
+              &lt;- Back
             </button>
           ) : <span />}
           {step < STEPS.length - 1 ? (
             <button type="button" onClick={goNext} className="btn-primary">
-              Continue â†’
+              Continue &gt;
             </button>
           ) : (
             <button type="submit" className="btn-primary">

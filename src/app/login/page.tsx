@@ -1,4 +1,4 @@
-﻿import Link from "next/link";
+import Link from "next/link";
 import { login } from "@/app/auth/actions";
 import { BrandMark } from "@/components/ui";
 
@@ -36,7 +36,7 @@ export default async function LoginPage({
       </form>
       <p style={{ marginTop: "1rem", fontSize: "0.85rem", color: "#475569" }}>
         <Link href="/forgot-password" style={{ color: "#00a86b", fontWeight: 600 }}>Forgot password?</Link>
-        {" Â· "}
+        {" · "}
         <Link href="/signup" style={{ color: "#00a86b", fontWeight: 600 }}>Create account</Link>
       </p>
     </div>

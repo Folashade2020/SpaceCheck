@@ -1,4 +1,4 @@
-﻿import Link from "next/link";
+import Link from "next/link";
 import { redirect } from "next/navigation";
 import { createClient } from "@/lib/supabase/server";
 import { calculateFitScore, type PriorityKey } from "@/lib/fitScore";
@@ -18,7 +18,7 @@ function firstName(email: string | null | undefined) {
 }
 
 function rolePill(role: string | null | undefined) {
-  // Honest labels only â€” we have no owner-verification program.
+  // Honest labels only - we have no owner-verification program.
   if (role === "owner_agent") return "Owner Account";
   if (role === "community") return "Community Account";
   return "Renter Account";
@@ -120,9 +120,9 @@ export default async function DashboardPage() {
 
   const pendingCount = (myRequests ?? []).filter((r) => r.status === "pending").length;
   const metrics = [
-    { icon: "â™¡", label: "Saved Spaces", value: String(savedProps.length), sub: savedProps.length === 1 ? "1 home shortlisted" : "homes shortlisted", href: "#saved", link: "Browse saved" },
-    { icon: "â—·", label: "Viewing Requests", value: String(myRequests?.length ?? 0), sub: pendingCount > 0 ? `${pendingCount} pending` : "all settled", href: "#requests", link: "View activity", badge: pendingCount > 0 ? `${pendingCount} Pending` : undefined },
-    { icon: "âœ¦", label: "Intelligence Reports", value: String(myReports?.length ?? 0), sub: "reports you contributed", href: "/search", link: "Keep exploring" },
+    { icon: "", label: "Saved Spaces", value: String(savedProps.length), sub: savedProps.length === 1 ? "1 home shortlisted" : "homes shortlisted", href: "#saved", link: "Browse saved" },
+    { icon: "--·", label: "Viewing Requests", value: String(myRequests?.length ?? 0), sub: pendingCount > 0 ? `${pendingCount} pending` : "all settled", href: "#requests", link: "View activity", badge: pendingCount > 0 ? `${pendingCount} Pending` : undefined },
+    { icon: "", label: "Intelligence Reports", value: String(myReports?.length ?? 0), sub: "reports you contributed", href: "/search", link: "Keep exploring" },
   ];
 
   return (
@@ -131,7 +131,7 @@ export default async function DashboardPage() {
       <div style={{ display: "flex", flexWrap: "wrap", alignItems: "center", justifyContent: "space-between", gap: "0.6rem" }}>
         <div>
           <h1 style={{ fontSize: 24, fontWeight: 700, letterSpacing: "-0.01em" }}>
-            Welcome back, {firstName(profile?.email ?? user.email)} ðŸ‘‹
+            Welcome back, {firstName(profile?.email ?? user.email)} 
           </h1>
           <p style={{ marginTop: "0.25rem", fontSize: 14, color: "#475569" }}>
             {profile?.email ?? user.email}{" "}
@@ -141,7 +141,7 @@ export default async function DashboardPage() {
           </p>
         </div>
         <Link href="/search" className="btn-primary" style={{ background: "#00A86B", boxShadow: "0 6px 16px rgb(0 168 107 / 0.35)" }}>
-          Explore Properties â†’
+          Explore Properties &gt;
         </Link>
       </div>
 
@@ -161,7 +161,7 @@ export default async function DashboardPage() {
             <p style={{ fontSize: 14, fontWeight: 700 }}>{m.label}</p>
             <p style={{ fontSize: 12, color: "#64748b" }}>{m.sub}</p>
             <Link href={m.href} style={{ marginTop: "0.5rem", display: "inline-block", fontSize: 13, fontWeight: 700, color: "#00a86b" }}>
-              {m.link} â†’
+              {m.link} &gt;
             </Link>
           </div>
         ))}
@@ -193,13 +193,13 @@ export default async function DashboardPage() {
                   <div style={{ padding: "0.75rem 0.9rem" }}>
                     <p style={{ fontWeight: 800, fontSize: 15 }}>
                       {display(p.bedrooms)}-bed {display(p.property_type)}
-                      {fit.score !== null && <span style={{ color: "#00a86b" }}> Â· {fit.score}</span>}
+                      {fit.score !== null && <span style={{ color: "#00a86b" }}> · {fit.score}</span>}
                     </p>
                     <p style={{ fontSize: 13, color: "#475569" }}>
-                      {display(p.neighborhood ?? p.general_area)}{p.area ? `, ${display(p.area)}` : ""} Â· â‚¦{p.rent ?? "?"}
+                      {display(p.neighborhood ?? p.general_area)}{p.area ? `, ${display(p.area)}` : ""} · ₦{p.rent ?? "?"}
                     </p>
                     <p style={{ fontSize: 12, color: "#64748b" }}>
-                      âš¡ {display(p.electricity)} Â· ðŸŒŠ {display(p.flood)}
+                       {display(p.electricity)} ·  {display(p.flood)}
                     </p>
                   </div>
                 </Link>
@@ -245,7 +245,7 @@ export default async function DashboardPage() {
                   </div>
                   {p && (
                     <p style={{ padding: "0 0.8rem 0.8rem", fontSize: 12, color: "#475569" }}>
-                      âš¡ {display(p.electricity)} Â· ðŸŒŠ {display(p.flood)} Â· {new Date(r.created_at).toLocaleDateString()}
+                       {display(p.electricity)} ·  {display(p.flood)} · {new Date(r.created_at).toLocaleDateString()}
                     </p>
                   )}
                 </div>

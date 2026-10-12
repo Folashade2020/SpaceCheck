@@ -54,7 +54,7 @@ export async function createProperty(formData: FormData) {
     .map((s) => s.trim())
     .filter(Boolean);
 
-  // File uploads: images only, ≤2MB each, max 5 files. Stored in the
+  // File uploads: images only, <=2MB each, max 5 files. Stored in the
   // public 'property-photos' bucket under <user-id>/ for ownership RLS.
   const uploaded: string[] = [];
   const files = formData.getAll("photos").filter((f) => f instanceof File && f.size > 0) as File[];

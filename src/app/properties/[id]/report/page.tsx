@@ -53,7 +53,7 @@ export default async function ReportPage({
         <h1 className="text-2xl font-bold text-zinc-900">What did you find?</h1>
         <p className="mt-1 text-sm text-zinc-600">
           Reporting on {property?.property_type ?? "property"} ·{" "}
-          {property?.general_area ?? "area"}. Short form — fill what you
+          {property?.general_area ?? "area"}. Short form - fill what you
           observed, leave the rest blank. Your source label is shown publicly.
         </p>
         {error && (
@@ -68,9 +68,9 @@ export default async function ReportPage({
         className="space-y-4 rounded-2xl bg-white p-6 shadow-sm"
       >
         <label className="block text-sm font-medium text-zinc-900">
-          I am a…
+          I am a...
           <select name="source_type" defaultValue="visitor" className={inputClass}>
-            <option value="visitor">Visitor — only visited</option>
+            <option value="visitor">Visitor - only visited</option>
             <option value="current_resident">Current resident</option>
             <option value="former_resident">Former resident</option>
             <option value="owner_agent">Owner / Agent</option>

@@ -7,7 +7,7 @@ const AreaMap = dynamic(() => import("./AreaMap"), {
   ssr: false,
   loading: () => (
     <p className="rounded-2xl bg-white p-4 text-sm text-zinc-600">
-      Loading map…
+      Loading map...
     </p>
   ),
 });

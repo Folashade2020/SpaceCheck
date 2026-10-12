@@ -1,4 +1,4 @@
-﻿import type { Metadata } from "next";
+import type { Metadata } from "next";
 import { Inter, Geist_Mono } from "next/font/google";
 import "./globals.css";
 import Navbar from "@/components/Navbar";
@@ -15,9 +15,9 @@ const geistMono = Geist_Mono({
 });
 
 export const metadata: Metadata = {
-  title: "SpaceCheck â€” Check the space before you commit",
+  title: "SpaceCheck - Check the space before you commit",
   description:
-    "Property intelligence for Lagos renters: flooding, electricity, water, road access, network and real resident experiences â€” matched to what matters to you.",
+    "Property intelligence for Lagos renters: flooding, electricity, water, road access, network and real resident experiences - matched to what matters to you.",
 };
 
 // Auth (cookies) is read in Navbar, so never prerender statically.

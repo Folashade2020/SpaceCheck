@@ -1,4 +1,4 @@
-﻿import { createClient } from "@/lib/supabase/server";
+import { createClient } from "@/lib/supabase/server";
 import { notFound } from "next/navigation";
 import Link from "next/link";
 import { calculateFitScore, type PriorityKey } from "@/lib/fitScore";
@@ -173,7 +173,7 @@ export default async function PropertyPage({
     isSaved = !!save;
   }
   const shareText = [
-    `${display(property.property_type)} Â· ${display(property.bedrooms)} bed Â· â‚¦${display(property.rent)} Â· ${display(property.neighborhood ?? property.general_area)}`,
+    `${display(property.property_type)} · ${display(property.bedrooms)} bed · ₦${display(property.rent)} · ${display(property.neighborhood ?? property.general_area)}`,
     fit.score !== null
       ? `Fit: ${fit.score}/100 (${fit.confidence} confidence)`
       : "Fit: no score yet",
@@ -201,22 +201,22 @@ export default async function PropertyPage({
     <div style={{ display: "flex", flexDirection: "column", gap: "1rem" }}>
       <div style={{ display: "flex", alignItems: "center", justifyContent: "space-between", gap: "0.6rem", flexWrap: "wrap" }}>
         <Link href="/search" style={{ fontSize: "0.87rem", fontWeight: 600, color: "#00a86b" }}>
-          â† Back to results
+          &lt;- Back to results
         </Link>
         <div style={{ display: "flex", gap: "0.5rem" }}>
           <ShareButton text={shareText} />
           {user ? (
             isSaved ? (
               <form action={unsaveProperty.bind(null, id)}>
-                <button type="submit" className="btn-secondary btn-sm">â˜… Saved</button>
+                <button type="submit" className="btn-secondary btn-sm">-~... Saved</button>
               </form>
             ) : (
               <form action={saveProperty.bind(null, id)}>
-                <button type="submit" className="btn-secondary btn-sm">â˜† Save</button>
+                <button type="submit" className="btn-secondary btn-sm"> Save</button>
               </form>
             )
           ) : (
-            <Link href="/login" className="btn-secondary btn-sm">â˜† Save</Link>
+            <Link href="/login" className="btn-secondary btn-sm"> Save</Link>
           )}
         </div>
       </div>
@@ -231,13 +231,13 @@ export default async function PropertyPage({
       )}
       {flagged === "1" && (
         <p style={{ borderRadius: 10, background: "#ecfdf5", color: "#007a4d", padding: "0.7rem 0.9rem", fontSize: "0.87rem" }}>
-          Thanks â€” your flag is now visible to other renters.
+          Thanks - your flag is now visible to other renters.
         </p>
       )}
       {totalFlags > 0 && (
         <p style={{ borderRadius: 10, background: "#fffbeb", border: "1px solid #fde68a", color: "#92400e", padding: "0.7rem 0.9rem", fontSize: "0.87rem" }}>
-          âš  {totalFlags} user flag{totalFlags > 1 ? "s" : ""}:{" "}
-          {Object.entries(flagCounts).map(([reason, n]) => `${n}Ã— ${reason}`).join(" Â· ")}
+          ! {totalFlags} user flag{totalFlags > 1 ? "s" : ""}:{" "}
+          {Object.entries(flagCounts).map(([reason, n]) => `${n}- ${reason}`).join(" · ")}
         </p>
       )}
 
@@ -258,7 +258,7 @@ export default async function PropertyPage({
           </div>
         ) : (
           <div style={{ background: "#f1f5f9", padding: "2.2rem", textAlign: "center", color: "#94a3b8", fontWeight: 600, fontSize: "0.9rem" }}>
-            No photos yet â€” inspect in person before deciding.
+            No photos yet - inspect in person before deciding.
           </div>
         )}
         <div style={{ padding: "1.3rem 1.4rem" }}>
@@ -267,23 +267,23 @@ export default async function PropertyPage({
             <span style={{ fontSize: "0.82rem", color: "#64748b", fontWeight: 600 }}>
               {display(property.neighborhood ?? property.general_area)}
               {property.area ? `, ${display(property.area)}` : ""}
-              {property.estate ? ` Â· ${display(property.estate)}` : ""}
+              {property.estate ? ` · ${display(property.estate)}` : ""}
             </span>
           </div>
           <h1 style={{ marginTop: "0.5rem", fontSize: "1.7rem", fontWeight: 800, letterSpacing: "-0.01em" }}>
-            {display(property.property_type)} Â· {display(property.bedrooms)} bed
-            {property.bathrooms ? ` Â· ${display(property.bathrooms)} bath` : ""}
+            {display(property.property_type)} · {display(property.bedrooms)} bed
+            {property.bathrooms ? ` · ${display(property.bathrooms)} bath` : ""}
           </h1>
           <p style={{ marginTop: "0.3rem", fontSize: "1.25rem", fontWeight: 800, color: "#00a86b" }}>
-            â‚¦{display(property.rent)} <span style={{ fontSize: "0.82rem", fontWeight: 500, color: "#64748b" }}>/ year Â· {display(property.availability)}</span>
+            ₦{display(property.rent)} <span style={{ fontSize: "0.82rem", fontWeight: 500, color: "#64748b" }}>/ year · {display(property.availability)}</span>
           </p>
           {Number.isFinite(Number(property.rent)) && (
             <p style={{ fontSize: "0.82rem", color: "#64748b" }}>
-              â‰ˆ â‚¦{Math.round(Number(property.rent) / 12).toLocaleString("en-NG")}/month equivalent (estimate â€” confirm payment terms with the lister)
+              ~ ₦{Math.round(Number(property.rent) / 12).toLocaleString("en-NG")}/month equivalent (estimate - confirm payment terms with the lister)
             </p>
           )}
           <p style={{ marginTop: "0.5rem", fontSize: "0.78rem", color: "#64748b" }}>
-            Exact address and coordinates are never published â€” general area only.
+            Exact address and coordinates are never published - general area only.
           </p>
         </div>
       </section>
@@ -309,15 +309,15 @@ export default async function PropertyPage({
             <ScoreRing score={fit.score} />
             <div style={{ flex: "1 1 240px" }}>
               <p style={{ fontSize: "0.85rem", color: "#475569" }}>
-                Confidence: <strong>{fit.confidence}</strong> Â· This measures how
-                well the property matches <em>your</em> stated preferences â€” not
+                Confidence: <strong>{fit.confidence}</strong> · This measures how
+                well the property matches <em>your</em> stated preferences - not
                 overall quality or safety.
               </p>
               {fit.reasons.length > 0 && (
                 <>
                   <p style={{ marginTop: "0.6rem", fontWeight: 750, fontSize: "0.9rem" }}>Strengths for you</p>
                   <ul style={{ fontSize: "0.88rem", color: "#334155", lineHeight: 1.65 }}>
-                    {fit.reasons.map((r) => <li key={r}>âœ“ {r}</li>)}
+                    {fit.reasons.map((r) => <li key={r}>+ {r}</li>)}
                   </ul>
                 </>
               )}
@@ -338,17 +338,17 @@ export default async function PropertyPage({
               Missing or unverified ({missing.length})
             </p>
             <p style={{ fontSize: "0.83rem", color: "#475569" }}>
-              {missing.map((f) => f.label).join(" Â· ")} â€” ask about these on your visit.
+              {missing.map((f) => f.label).join(" · ")} - ask about these on your visit.
             </p>
           </div>
         )}
         <div style={{ marginTop: "0.9rem", background: "#F8FAFC", border: "1px solid #e2e8f0", borderRadius: 10, padding: "0.7rem 0.9rem" }}>
           <p style={{ fontSize: "0.85rem", fontWeight: 700 }}>Before you pay, verify</p>
           <ul style={{ fontSize: "0.83rem", color: "#475569", lineHeight: 1.7 }}>
-            <li>Â· Visit after rainfall if flooding matters to you</li>
-            <li>Â· Confirm electricity hours and meter type with residents</li>
-            <li>Â· Test road access and network on your own devices</li>
-            <li>Â· Never pay before a physical inspection</li>
+            <li>· Visit after rainfall if flooding matters to you</li>
+            <li>· Confirm electricity hours and meter type with residents</li>
+            <li>· Test road access and network on your own devices</li>
+            <li>· Never pay before a physical inspection</li>
           </ul>
         </div>
       </section>
@@ -383,11 +383,11 @@ export default async function PropertyPage({
           </div>
         </div>
         <p style={{ marginTop: "0.35rem", fontSize: "0.83rem", color: "#64748b" }}>
-          Reports describe the contributor&apos;s own experience near this property â€” a report from one estate does not prove conditions street-wide.
+          Reports describe the contributor&apos;s own experience near this property - a report from one estate does not prove conditions street-wide.
         </p>
         {hasConflict && (
           <p style={{ marginTop: "0.6rem", borderRadius: 10, background: "#fffbeb", border: "1px solid #fde68a", color: "#92400e", padding: "0.6rem 0.8rem", fontSize: "0.86rem" }}>
-            Conflicting information â€” verify before deciding. Reports disagree on {floodValues.length > 1 ? "flooding" : "electricity"}.
+            Conflicting information - verify before deciding. Reports disagree on {floodValues.length > 1 ? "flooding" : "electricity"}.
           </p>
         )}
         {reportList.length === 0 ? (
@@ -402,7 +402,7 @@ export default async function PropertyPage({
                   <span className="badge badge-brand"><SourceLabel source={String(r.source_type)} /></span>
                   <span style={{ fontSize: "0.78rem", color: "#64748b" }}>
                     {new Date(r.created_at).toLocaleDateString()}
-                    {r.listing_accuracy ? ` Â· Listing: ${display(r.listing_accuracy)}` : ""}
+                    {r.listing_accuracy ? ` · Listing: ${display(r.listing_accuracy)}` : ""}
                   </span>
                 </p>
                 <dl style={{ marginTop: "0.4rem", display: "grid", gap: "0.2rem 0.8rem", gridTemplateColumns: "repeat(auto-fit, minmax(180px, 1fr))", color: "#334155" }}>
@@ -413,7 +413,7 @@ export default async function PropertyPage({
                   {r.network_quality && <div>Network: {display(r.network_quality)}</div>}
                   {r.security_experience && <div>Security: {display(r.security_experience)}</div>}
                 </dl>
-                {r.comment && <p style={{ marginTop: "0.35rem", color: "#475569" }}>â€œ{r.comment}â€</p>}
+                {r.comment && <p style={{ marginTop: "0.35rem", color: "#475569" }}>&quot;{r.comment}&quot;</p>}
               </li>
             ))}
           </ul>
@@ -424,7 +424,7 @@ export default async function PropertyPage({
       </div>
       <aside style={{ position: "sticky", top: 76, display: "flex", flexDirection: "column", gap: "1rem" }}>
       <section className="card" style={{ padding: "1.3rem 1.4rem" }}>
-        <p style={{ fontSize: "1.3rem", fontWeight: 800 }}>â‚¦{display(property.rent)} <span style={{ fontSize: "0.8rem", fontWeight: 500, color: "#64748b" }}>/ year</span></p>
+        <p style={{ fontSize: "1.3rem", fontWeight: 800 }}>₦{display(property.rent)} <span style={{ fontSize: "0.8rem", fontWeight: 500, color: "#64748b" }}>/ year</span></p>
         <p style={{ fontSize: "0.83rem", color: "#475569" }}>
           {display(property.neighborhood ?? property.general_area)}{property.area ? `, ${display(property.area)}` : ""}
         </p>
@@ -434,7 +434,7 @@ export default async function PropertyPage({
         </p>
         {privateContact.contact_phone || privateContact.exact_address ? (
           <div style={{ marginTop: "0.5rem", background: "#ecfdf5", border: "1px solid #a7f3d0", borderRadius: 10, padding: "0.6rem 0.8rem", fontSize: "0.85rem" }}>
-            <p style={{ fontWeight: 700, color: "#007a4d" }}>ðŸ”“ Shared with you {isOwner ? "(you listed this property)" : "(viewing confirmed)"}</p>
+            <p style={{ fontWeight: 700, color: "#007a4d" }}> Shared with you {isOwner ? "(you listed this property)" : "(viewing confirmed)"}</p>
             {privateContact.contact_phone && <p>Phone: {display(privateContact.contact_phone)}</p>}
             {privateContact.exact_address && <p>Exact address: {display(privateContact.exact_address)}</p>}
           </div>
@@ -445,7 +445,7 @@ export default async function PropertyPage({
         )}
         {myViewingStatus && !isOwner && (
           <p style={{ marginTop: "0.4rem", fontSize: "0.83rem", fontWeight: 700, color: myViewingStatus === "confirmed" ? "#007a4d" : "#92400e" }}>
-            Your request: {myViewingStatus === "confirmed" ? "Confirmed âœ“" : myViewingStatus === "declined" ? "Declined" : "Pending agent confirmation"}
+            Your request: {myViewingStatus === "confirmed" ? "Confirmed +" : myViewingStatus === "declined" ? "Declined" : "Pending agent confirmation"}
           </p>
         )}
         {user ? (
@@ -484,7 +484,7 @@ export default async function PropertyPage({
             <ul style={{ marginTop: "0.4rem", display: "flex", flexDirection: "column", gap: "0.4rem", fontSize: "0.87rem" }}>
               {ownerRequests.map((r) => (
                 <li key={r.id} style={{ border: "1px solid #e2e8f0", borderRadius: 8, padding: "0.5rem 0.7rem" }}>
-                  <p>{r.message ?? "(no message)"} Â· {r.status} Â· {new Date(r.created_at).toLocaleDateString()}</p>
+                  <p>{r.message ?? "(no message)"} · {r.status} · {new Date(r.created_at).toLocaleDateString()}</p>
                   {r.status === "pending" && (
                     <div style={{ marginTop: "0.4rem", display: "flex", gap: "0.4rem" }}>
                       <form action={confirmViewingRequest.bind(null, id, r.id)}>

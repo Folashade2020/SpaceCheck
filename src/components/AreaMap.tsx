@@ -1,4 +1,4 @@
-﻿"use client";
+"use client";
 
 import { MapContainer, TileLayer, Circle, Popup } from "react-leaflet";
 import "leaflet/dist/leaflet.css";
@@ -17,7 +17,7 @@ export interface MapProperty {
   score?: number | null;
 }
 
-// Approximate area circles only â€” center is the neighborhood centroid,
+// Approximate area circles only - center is the neighborhood centroid,
 // radius 600m. Never an exact house pin (privacy first).
 export default function AreaMap({ properties }: { properties: MapProperty[] }) {
   const points = properties
@@ -53,9 +53,9 @@ export default function AreaMap({ properties }: { properties: MapProperty[] }) {
           >
             <Popup>
               <strong>
-                {p.property_type ?? "Property"} Â· {p.bedrooms ?? "?"} bed
+                {p.property_type ?? "Property"} · {p.bedrooms ?? "?"} bed
               </strong>
-              <br />â‚¦{p.rent ?? "Not provided"} Â·{" "}
+              <br />₦{p.rent ?? "Not provided"} ·{" "}
               {p.neighborhood ?? p.general_area ?? ""}
               {p.score != null ? (
                 <>

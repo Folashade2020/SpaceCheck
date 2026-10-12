@@ -1,4 +1,4 @@
-﻿import Link from "next/link";
+import Link from "next/link";
 import type { ReactNode } from "react";
 
 export function BrandMark({ size = 30 }: { size?: number }) {
@@ -18,7 +18,7 @@ export function BrandMark({ size = 30 }: { size?: number }) {
         fontSize: size * 0.55,
       }}
     >
-      âœ“
+      +
     </span>
   );
 }
@@ -152,7 +152,7 @@ export function SiteFooter() {
         </div>
         <p style={{ fontSize: "0.75rem", color: "#94a3b8", borderTop: "1px solid #334155", paddingTop: "1rem" }}>
           SpaceCheck shows what is known and labels what is not. Unknown
-          information appears as â€œNot providedâ€ or â€œLimited informationâ€ â€” never
+          information appears as &quot;Not provided&quot; or &quot;Limited information&quot; - never
           invented. Exact residential addresses are never published.
         </p>
       </div>

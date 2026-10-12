@@ -1,4 +1,4 @@
-﻿import Link from "next/link";
+import Link from "next/link";
 import { signup } from "@/app/auth/actions";
 import { BrandMark } from "@/components/ui";
 import NdpaConsent from "@/components/NdpaConsent";
@@ -34,11 +34,11 @@ export default async function SignupPage({
           <input name="password" type="password" required minLength={6} className="input" autoComplete="new-password" />
         </label>
         <label className="label">
-          I am aâ€¦
+          I am a...
           <select name="role" className="input" defaultValue="renter">
-            <option value="renter">Renter â€” looking for a place</option>
-            <option value="owner_agent">Owner / Agent â€” listing property</option>
-            <option value="community">Community â€” lived in / visited</option>
+            <option value="renter">Renter - looking for a place</option>
+            <option value="owner_agent">Owner / Agent - listing property</option>
+            <option value="community">Community - lived in / visited</option>
           </select>
         </label>
         <NdpaConsent />

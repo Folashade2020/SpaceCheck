@@ -1,4 +1,4 @@
-﻿import { redirect } from "next/navigation";
+import { redirect } from "next/navigation";
 import { createClient } from "@/lib/supabase/server";
 import { deleteMyData } from "./actions";
 import { BrandMark } from "@/components/ui";
@@ -59,7 +59,7 @@ export default async function SettingsPage({
         </form>
         <p style={{ marginTop: "0.6rem", fontSize: "0.78rem", color: "#64748b" }}>
           Note: the bare login identity is removed separately via Supabase
-          Dashboard â†’ Authentication (requires the service key, never shipped
+          Dashboard &gt; Authentication (requires the service key, never shipped
           in the app).
         </p>
       </section>
