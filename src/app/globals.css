@@ -1,36 +1,180 @@
 @import "tailwindcss";
 
 :root {
-  --background: #f4f4f5;
-  --foreground: #18181b;
+  --background: #faf9f6;
+  --surface: #ffffff;
+  --ink: #1c1917;
+  --ink-soft: #57534e;
+  --ink-faint: #78716c;
+  --line: #e7e5e4;
+  --brand: #047857;
+  --brand-dark: #065f46;
+  --brand-tint: #ecfdf5;
+  --warn-bg: #fffbeb;
+  --warn-ink: #92400e;
+  --warn-line: #fde68a;
+  --danger-ink: #b91c1c;
+  --radius: 14px;
 }
 
 @theme inline {
   --color-background: var(--background);
-  --color-foreground: var(--foreground);
+  --color-foreground: var(--ink);
   --font-sans: var(--font-geist-sans);
   --font-mono: var(--font-geist-mono);
 }
 
-/* Phase 0 fix: force light theme so typing is always high-contrast.
-   (System dark mode was washing out inputs inside white cards.) */
-
 body {
   background: var(--background);
-  color: var(--foreground);
-  font-family: Arial, Helvetica, sans-serif;
+  color: var(--ink);
+  font-family: var(--font-geist-sans), ui-sans-serif, system-ui, sans-serif;
+  -webkit-font-smoothing: antialiased;
+}
+
+/* ---------- reusable primitives ---------- */
+.card {
+  background: var(--surface);
+  border: 1px solid var(--line);
+  border-radius: var(--radius);
+  box-shadow: 0 1px 2px rgb(28 25 23 / 0.05);
+}
+
+.btn-primary {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.5rem;
+  background: var(--brand);
+  color: #fff;
+  font-weight: 600;
+  border-radius: 999px;
+  padding: 0.65rem 1.4rem;
+  font-size: 0.9rem;
+  transition: background 0.15s ease;
+}
+.btn-primary:hover {
+  background: var(--brand-dark);
+}
+.btn-primary:focus-visible {
+  outline: 2px solid var(--brand-dark);
+  outline-offset: 2px;
+}
+
+.btn-secondary {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.5rem;
+  background: transparent;
+  color: var(--ink);
+  font-weight: 600;
+  border: 1px solid var(--line);
+  border-radius: 999px;
+  padding: 0.65rem 1.4rem;
+  font-size: 0.9rem;
+  transition: background 0.15s ease, border-color 0.15s ease;
+}
+.btn-secondary:hover {
+  background: #f5f5f4;
+  border-color: #d6d3d1;
+}
+.btn-secondary:focus-visible {
+  outline: 2px solid var(--brand);
+  outline-offset: 2px;
+}
+
+.btn-sm {
+  padding: 0.4rem 0.9rem;
+  font-size: 0.8rem;
+}
+
+.label {
+  display: block;
+  font-size: 0.85rem;
+  font-weight: 600;
+  color: var(--ink);
+}
+.input,
+select.input,
+textarea.input {
+  margin-top: 0.35rem;
+  width: 100%;
+  border-radius: 10px;
+  border: 1px solid #d6d3d1;
+  background: #fff;
+  color: var(--ink);
+  padding: 0.6rem 0.8rem;
+  font-size: 0.92rem;
+}
+.input:focus {
+  outline: 2px solid var(--brand);
+  outline-offset: 0;
+  border-color: var(--brand);
+}
+.input::placeholder {
+  color: #a8a29e;
+}
+.hint {
+  margin-top: 0.3rem;
+  display: block;
+  font-size: 0.75rem;
+  color: var(--ink-faint);
+}
+
+.badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.3rem;
+  font-size: 0.72rem;
+  font-weight: 600;
+  border-radius: 999px;
+  padding: 0.2rem 0.6rem;
+  border: 1px solid transparent;
+  white-space: nowrap;
+}
+.badge-brand {
+  background: var(--brand-tint);
+  color: var(--brand-dark);
+  border-color: #a7f3d0;
+}
+.badge-neutral {
+  background: #f5f5f4;
+  color: var(--ink-soft);
+  border-color: var(--line);
+}
+.badge-warn {
+  background: var(--warn-bg);
+  color: var(--warn-ink);
+  border-color: var(--warn-line);
+}
+.badge-dark {
+  background: var(--ink);
+  color: #fff;
+}
+
+.score-ring-track {
+  stroke: #e7e5e4;
+}
+.score-ring-value {
+  stroke: var(--brand);
+  stroke-linecap: round;
+  transition: stroke-dashoffset 0.6s ease;
 }
 
 /* Readable form controls everywhere */
 input,
 select,
 textarea {
-  background-color: #ffffff;
-  color: #18181b;
-  border-color: #d4d4d8;
+  color-scheme: light;
 }
 
-input::placeholder,
-textarea::placeholder {
-  color: #a1a1aa;
+a:focus-visible,
+button:focus-visible {
+  outline: 2px solid var(--brand);
+  outline-offset: 2px;
+}
+
+.leaflet-container {
+  font-family: inherit;
+  border-radius: 0;
 }

@@ -1,6 +1,7 @@
 import Link from "next/link";
 import { redirect } from "next/navigation";
 import { createClient } from "@/lib/supabase/server";
+import { BrandMark } from "@/components/ui";
 
 export default async function DashboardPage() {
   const supabase = await createClient();
@@ -18,7 +19,6 @@ export default async function DashboardPage() {
     .eq("id", user.id)
     .single();
 
-  // RLS: user can only read their own saves/requests. Count them for proof of connection.
   const { count: savesCount } = await supabase
     .from("saves")
     .select("*", { count: "exact", head: true })
@@ -42,11 +42,11 @@ export default async function DashboardPage() {
     .limit(20);
 
   const savedIds = (savedRows ?? []).map((s) => s.property_id);
-  let savedProps: { id: string; property_type: string | null; general_area: string | null; rent: number | null }[] = [];
+  let savedProps: { id: string; property_type: string | null; general_area: string | null; neighborhood: string | null; rent: number | null }[] = [];
   if (savedIds.length > 0) {
     const { data } = await supabase
       .from("property_public")
-      .select("id, property_type, general_area, rent")
+      .select("id, property_type, general_area, neighborhood, rent")
       .in("id", savedIds);
     savedProps = data ?? [];
   }
@@ -58,72 +58,81 @@ export default async function DashboardPage() {
     .order("created_at", { ascending: false })
     .limit(10);
 
-  return (
-    <div className="space-y-4">
-      <div className="rounded-2xl bg-white p-6 shadow-sm">
-        <h1 className="text-2xl font-bold">Dashboard</h1>
-        <p className="mt-1 text-sm text-zinc-600">
-          Logged in as {profile?.email ?? user.email} · Role:{" "}
-          {profile?.role ?? "Not provided"}
-        </p>
-        <p className="mt-2 text-sm text-zinc-600">
-          Saved: {savesCount ?? 0} · Viewing requests: {requestsCount ?? 0} ·
-          Reports submitted: {myReports?.length ?? 0} · Supabase connected.
-        </p>
-        <div className="mt-4 flex gap-3 text-sm">
-          <Link href="/onboarding" className="underline">
-            Change role
-          </Link>
-          <Link href="/preferences" className="underline">
-            Set preferences
-          </Link>
-          <Link href="/search" className="underline">
-            Search properties
-          </Link>
-          <Link href="/submit" className="underline">
-            List a property
-          </Link>
-        </div>
-      </div>
+  const stats = [
+    { label: "Saved", value: savesCount ?? 0 },
+    { label: "Viewings", value: requestsCount ?? 0 },
+    { label: "Reports", value: myReports?.length ?? 0 },
+  ];
 
-      <div className="rounded-2xl bg-white p-6 shadow-sm">
-        <h2 className="font-semibold">Saved properties ({savedProps.length})</h2>
+  return (
+    <div style={{ display: "flex", flexDirection: "column", gap: "1rem" }}>
+      <section className="card" style={{ padding: "1.5rem", background: "#1C1917", borderColor: "#1C1917", color: "#FAF9F6" }}>
+        <p style={{ fontSize: "0.8rem", color: "#A7F3D0", fontWeight: 700 }}>DASHBOARD</p>
+        <h1 style={{ fontSize: "1.5rem", fontWeight: 800, marginTop: "0.3rem" }}>
+          {profile?.email ?? user.email}
+        </h1>
+        <p style={{ fontSize: "0.87rem", color: "#D6D3D1" }}>
+          Role: {profile?.role ?? "Not provided"}
+        </p>
+        <div style={{ display: "flex", gap: "0.6rem", marginTop: "0.9rem", flexWrap: "wrap" }}>
+          {stats.map((s) => (
+            <div key={s.label} style={{ background: "#292524", borderRadius: 10, padding: "0.55rem 0.9rem" }}>
+              <span style={{ fontWeight: 800, fontSize: "1.1rem" }}>{s.value}</span>{" "}
+              <span style={{ fontSize: "0.8rem", color: "#A8A29E" }}>{s.label}</span>
+            </div>
+          ))}
+        </div>
+        <div style={{ display: "flex", gap: "0.6rem", marginTop: "1rem", flexWrap: "wrap" }}>
+          <Link href="/search" className="btn-primary btn-sm">Find a property</Link>
+          <Link href="/preferences" className="btn-secondary btn-sm" style={{ borderColor: "#44403C", color: "#FAF9F6" }}>Edit preferences</Link>
+        </div>
+      </section>
+
+      <section className="card" style={{ padding: "1.3rem 1.4rem" }}>
+        <h2 style={{ fontWeight: 800 }}>Saved properties ({savedProps.length})</h2>
         {savedProps.length === 0 ? (
-          <p className="mt-1 text-sm text-zinc-600">
+          <p style={{ marginTop: "0.4rem", fontSize: "0.88rem", color: "#57534e" }}>
             Nothing saved yet. Open a property and tap ☆ Save.
           </p>
         ) : (
-          <ul className="mt-2 space-y-1 text-sm">
+          <ul style={{ marginTop: "0.5rem", display: "flex", flexDirection: "column", gap: "0.35rem", fontSize: "0.9rem" }}>
             {savedProps.map((p) => (
               <li key={p.id}>
-                <Link href={`/properties/${p.id}`} className="underline">
-                  {p.property_type ?? "Property"} · {p.general_area ?? "area"} · ₦{p.rent ?? "?"}
+                <Link href={`/properties/${p.id}`} style={{ color: "#047857", fontWeight: 600 }}>
+                  {p.property_type ?? "Property"} · {p.neighborhood ?? p.general_area ?? "area"} · ₦{p.rent ?? "?"}
                 </Link>
               </li>
             ))}
           </ul>
         )}
-      </div>
+      </section>
 
-      <div className="rounded-2xl bg-white p-6 shadow-sm">
-        <h2 className="font-semibold">My viewing requests ({myRequests?.length ?? 0})</h2>
+      <section className="card" style={{ padding: "1.3rem 1.4rem" }}>
+        <h2 style={{ fontWeight: 800 }}>My viewing requests ({myRequests?.length ?? 0})</h2>
         {(myRequests ?? []).length === 0 ? (
-          <p className="mt-1 text-sm text-zinc-600">
+          <p style={{ marginTop: "0.4rem", fontSize: "0.88rem", color: "#57534e" }}>
             No requests yet. Open a property and tap Request a Viewing.
           </p>
         ) : (
-          <ul className="mt-2 space-y-1 text-sm text-zinc-600">
+          <ul style={{ marginTop: "0.5rem", display: "flex", flexDirection: "column", gap: "0.35rem", fontSize: "0.88rem", color: "#57534e" }}>
             {(myRequests ?? []).map((r) => (
               <li key={r.id}>
-                <Link href={`/properties/${r.property_id}`} className="underline">
-                  Property
-                </Link>{" "}
-                · {r.status} · {new Date(r.created_at).toLocaleDateString()}
+                <Link href={`/properties/${r.property_id}`} style={{ color: "#047857", fontWeight: 600 }}>Property</Link>
+                {" "}· {r.status} · {new Date(r.created_at).toLocaleDateString()}
               </li>
             ))}
           </ul>
         )}
+      </section>
+
+      <div style={{ display: "flex", gap: "0.8rem", fontSize: "0.85rem", flexWrap: "wrap" }}>
+        <Link href="/onboarding" style={{ color: "#047857", fontWeight: 600 }}>Change role</Link>
+        <Link href="/submit" style={{ color: "#047857", fontWeight: 600 }}>List a property</Link>
       </div>
+
+      <p style={{ fontSize: "0.8rem", color: "#78716c", display: "flex", alignItems: "center", gap: "0.4rem" }}>
+        <BrandMark size={18} /> Connected to Supabase.
+      </p>
     </div>
   );
 }

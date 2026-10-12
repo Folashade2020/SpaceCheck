@@ -1,4 +1,6 @@
+import Link from "next/link";
 import { signup } from "@/app/auth/actions";
+import { BrandMark } from "@/components/ui";
 
 export default async function SignupPage({
   searchParams,
@@ -8,56 +10,41 @@ export default async function SignupPage({
   const { error } = await searchParams;
 
   return (
-    <div className="mx-auto max-w-md rounded-2xl bg-white p-6 shadow-sm">
-      <h1 className="text-2xl font-bold">Create account</h1>
-      <p className="mt-1 text-sm text-zinc-600">
-        Sign up to save properties and request viewings.
+    <div className="card" style={{ maxWidth: 440, margin: "0 auto", padding: "1.8rem" }}>
+      <div style={{ display: "flex", alignItems: "center", gap: "0.6rem" }}>
+        <BrandMark />
+        <h1 style={{ fontSize: "1.4rem", fontWeight: 800 }}>Create account</h1>
+      </div>
+      <p style={{ marginTop: "0.3rem", fontSize: "0.88rem", color: "#57534e" }}>
+        Free. Save properties, request viewings, get personal Fit Scores.
       </p>
       {error && (
-        <p className="mt-4 rounded bg-red-50 p-2 text-sm text-red-700">
+        <p style={{ marginTop: "0.9rem", borderRadius: 10, background: "#fef2f2", color: "#b91c1c", padding: "0.6rem 0.8rem", fontSize: "0.85rem" }}>
           {error}
         </p>
       )}
-      <form action={signup} className="mt-4 space-y-3">
-        <label className="block text-sm font-medium text-zinc-900">
+      <form action={signup} style={{ marginTop: "1rem", display: "flex", flexDirection: "column", gap: "0.8rem" }}>
+        <label className="label">
           Email
-          <input
-            name="email"
-            type="email"
-            required
-            className="mt-1 w-full rounded border border-zinc-300 bg-white px-3 py-2 text-zinc-900 placeholder:text-zinc-400 focus:outline-none focus:ring-2 focus:ring-zinc-900"
-            placeholder="you@example.com"
-          />
+          <input name="email" type="email" required className="input" placeholder="you@example.com" autoComplete="email" />
         </label>
-        <label className="block text-sm font-medium text-zinc-900">
+        <label className="label">
           Password (min 6 characters)
-          <input
-            name="password"
-            type="password"
-            required
-            minLength={6}
-            className="mt-1 w-full rounded border border-zinc-300 bg-white px-3 py-2 text-zinc-900 focus:outline-none focus:ring-2 focus:ring-zinc-900"
-          />
+          <input name="password" type="password" required minLength={6} className="input" autoComplete="new-password" />
         </label>
-        <label className="block text-sm font-medium text-zinc-900">
+        <label className="label">
           I am a…
-          <select
-            name="role"
-            className="mt-1 w-full rounded border border-zinc-300 bg-white px-3 py-2 text-zinc-900 focus:outline-none focus:ring-2 focus:ring-zinc-900"
-            defaultValue="renter"
-          >
+          <select name="role" className="input" defaultValue="renter">
             <option value="renter">Renter — looking for a place</option>
             <option value="owner_agent">Owner / Agent — listing property</option>
             <option value="community">Community — lived in / visited</option>
           </select>
         </label>
-        <button
-          type="submit"
-          className="w-full rounded-full bg-zinc-900 py-2.5 text-white"
-        >
-          Sign up
-        </button>
+        <button type="submit" className="btn-primary">Sign up free</button>
       </form>
+      <p style={{ marginTop: "1rem", fontSize: "0.85rem", color: "#57534e" }}>
+        Already have an account? <Link href="/login" style={{ color: "#047857", fontWeight: 600 }}>Log in</Link>
+      </p>
     </div>
   );
 }

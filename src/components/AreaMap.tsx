@@ -49,7 +49,7 @@ export default function AreaMap({ properties }: { properties: MapProperty[] }) {
             key={p.id}
             center={[c!.lat, c!.lng]}
             radius={600}
-            pathOptions={{ color: "#18181b", weight: 1, fillOpacity: 0.15 }}
+            pathOptions={{ color: "#047857", weight: 2, fillColor: "#047857", fillOpacity: 0.18 }}
           >
             <Popup>
               <strong>

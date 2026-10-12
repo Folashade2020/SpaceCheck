@@ -1,5 +1,6 @@
 import Link from "next/link";
 import { login } from "@/app/auth/actions";
+import { BrandMark } from "@/components/ui";
 
 export default async function LoginPage({
   searchParams,
@@ -9,47 +10,34 @@ export default async function LoginPage({
   const { error } = await searchParams;
 
   return (
-    <div className="mx-auto max-w-md rounded-2xl bg-white p-6 shadow-sm">
-      <h1 className="text-2xl font-bold">Log in</h1>
+    <div className="card" style={{ maxWidth: 440, margin: "0 auto", padding: "1.8rem" }}>
+      <div style={{ display: "flex", alignItems: "center", gap: "0.6rem" }}>
+        <BrandMark />
+        <h1 style={{ fontSize: "1.4rem", fontWeight: 800 }}>Welcome back</h1>
+      </div>
+      <p style={{ marginTop: "0.3rem", fontSize: "0.88rem", color: "#57534e" }}>
+        Log in to see your personal Fit Scores and saved properties.
+      </p>
       {error && (
-        <p className="mt-4 rounded bg-red-50 p-2 text-sm text-red-700">
+        <p style={{ marginTop: "0.9rem", borderRadius: 10, background: "#fef2f2", color: "#b91c1c", padding: "0.6rem 0.8rem", fontSize: "0.85rem" }}>
           {error}
         </p>
       )}
-      <form action={login} className="mt-4 space-y-3">
-        <label className="block text-sm font-medium text-zinc-900">
+      <form action={login} style={{ marginTop: "1rem", display: "flex", flexDirection: "column", gap: "0.8rem" }}>
+        <label className="label">
           Email
-          <input
-            name="email"
-            type="email"
-            required
-            className="mt-1 w-full rounded border border-zinc-300 bg-white px-3 py-2 text-zinc-900 placeholder:text-zinc-400 focus:outline-none focus:ring-2 focus:ring-zinc-900"
-          />
+          <input name="email" type="email" required className="input" placeholder="you@example.com" autoComplete="email" />
         </label>
-        <label className="block text-sm font-medium text-zinc-900">
+        <label className="label">
           Password
-          <input
-            name="password"
-            type="password"
-            required
-            className="mt-1 w-full rounded border border-zinc-300 bg-white px-3 py-2 text-zinc-900 focus:outline-none focus:ring-2 focus:ring-zinc-900"
-          />
+          <input name="password" type="password" required className="input" autoComplete="current-password" />
         </label>
-        <button
-          type="submit"
-          className="w-full rounded-full bg-zinc-900 py-2.5 text-white"
-        >
-          Log in
-        </button>
+        <button type="submit" className="btn-primary">Log in</button>
       </form>
-      <p className="mt-4 text-sm">
-        <Link href="/forgot-password" className="underline">
-          Forgot password?
-        </Link>{" "}
-        ·{" "}
-        <Link href="/signup" className="underline">
-          Create account
-        </Link>
+      <p style={{ marginTop: "1rem", fontSize: "0.85rem", color: "#57534e" }}>
+        <Link href="/forgot-password" style={{ color: "#047857", fontWeight: 600 }}>Forgot password?</Link>
+        {" · "}
+        <Link href="/signup" style={{ color: "#047857", fontWeight: 600 }}>Create account</Link>
       </p>
     </div>
   );
