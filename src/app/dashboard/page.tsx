@@ -29,6 +29,12 @@ export default async function DashboardPage() {
     .select("*", { count: "exact", head: true })
     .eq("user_id", user.id);
 
+  const { data: myReports } = await supabase
+    .from("reports")
+    .select("id")
+    .eq("reporter_id", user.id)
+    .limit(50);
+
   return (
     <div className="space-y-4">
       <div className="rounded-2xl bg-white p-6 shadow-sm">
@@ -39,7 +45,7 @@ export default async function DashboardPage() {
         </p>
         <p className="mt-2 text-sm text-zinc-600">
           Saved: {savesCount ?? 0} · Viewing requests: {requestsCount ?? 0} ·
-          Supabase connected.
+          Reports submitted: {myReports?.length ?? 0} · Supabase connected.
         </p>
         <div className="mt-4 flex gap-3 text-sm">
           <Link href="/onboarding" className="underline">

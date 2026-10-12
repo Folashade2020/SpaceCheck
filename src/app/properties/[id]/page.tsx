@@ -30,10 +30,39 @@ export default async function PropertyPage({
 
   const { data: reports } = await supabase
     .from("reports")
-    .select("id, source_type, electricity, flood, water, road_access, network_quality, listing_accuracy, comment, created_at")
+    .select("id, source_type, electricity, flood, water, road_access, network_quality, security_experience, listing_accuracy, comment, created_at")
     .eq("property_id", id)
     .order("created_at", { ascending: false })
     .limit(20);
+
+  const reportList = reports ?? [];
+
+  // Effective verification label (derived, no DB write so visitors can contribute under RLS).
+  const effectiveStatus =
+    reportList.length >= 2
+      ? "Community reported"
+      : reportList.length === 1
+        ? "Reported by users"
+        : String(property.verification_status ?? "Limited information");
+
+  // Conflict detection (PRD Sec 10): show disagreements, never call anyone a liar.
+  function distinct(values: unknown[]) {
+    const seen = new Set<string>();
+    for (const v of values) {
+      const s = String(v ?? "").trim().toLowerCase();
+      if (s && s !== "not provided") seen.add(s);
+    }
+    return [...seen];
+  }
+  const floodValues = distinct([
+    property.flood,
+    ...reportList.map((r) => r.flood),
+  ]);
+  const electricityValues = distinct([
+    property.electricity,
+    ...reportList.map((r) => r.electricity),
+  ]);
+  const hasConflict = floodValues.length > 1 || electricityValues.length > 1;
 
   // Personal fit (PRD Sec 12-13): score + confidence separate, never invented.
   const {
@@ -62,7 +91,7 @@ export default async function PropertyPage({
     <div className="space-y-4">
       <div className="rounded-2xl bg-white p-6 shadow-sm">
         <p className="text-xs font-semibold text-zinc-500">
-          Section 1 — The Property · {display(property.verification_status)}
+          Section 1 — The Property · {display(effectiveStatus)}
         </p>
         <h1 className="mt-1 text-2xl font-bold">
           {display(property.property_type)} · {display(property.bedrooms)} bed
@@ -135,19 +164,54 @@ export default async function PropertyPage({
       </div>
 
       <div className="rounded-2xl bg-white p-6 shadow-sm">
-        <p className="text-xs font-semibold text-zinc-500">
-          Section 4 — What People Say
-        </p>
-        {(reports ?? []).length === 0 && (
+        <div className="flex items-center justify-between">
+          <p className="text-xs font-semibold text-zinc-500">
+            Section 4 — What People Say ({reportList.length})
+          </p>
+          <Link
+            href={`/properties/${id}/report`}
+            className="rounded-full bg-zinc-900 px-3 py-1 text-xs text-white"
+          >
+            Report what you found
+          </Link>
+        </div>
+        {hasConflict && (
+          <p className="mt-2 rounded bg-amber-50 p-2 text-sm text-amber-800">
+            Conflicting information — verify before deciding. Reports disagree
+            on {floodValues.length > 1 ? "flooding" : "electricity"}.
+          </p>
+        )}
+        {reportList.length === 0 && (
           <p className="mt-1 text-sm text-zinc-600">
             No community reports yet. Be the first to report after visiting.
           </p>
         )}
         <ul className="mt-2 space-y-2 text-sm">
-          {(reports ?? []).map((r) => (
-            <li key={r.id} className="rounded border p-2">
-              <span className="font-semibold">{display(r.source_type)}</span> ·{" "}
-              {display(r.comment)}
+          {reportList.map((r) => (
+            <li key={r.id} className="rounded border border-zinc-200 p-3">
+              <p>
+                <span className="rounded-full bg-zinc-100 px-2 py-0.5 text-xs font-semibold">
+                  {display(r.source_type)}
+                </span>{" "}
+                {r.listing_accuracy && (
+                  <span className="text-xs text-zinc-500">
+                    Listing accuracy: {display(r.listing_accuracy)}
+                  </span>
+                )}
+              </p>
+              <dl className="mt-1 grid grid-cols-2 gap-x-3 gap-y-0.5 text-[13px] text-zinc-700">
+                {r.electricity && <div>Electricity: {display(r.electricity)}</div>}
+                {r.flood && <div>Flood: {display(r.flood)}</div>}
+                {r.water && <div>Water: {display(r.water)}</div>}
+                {r.road_access && <div>Road: {display(r.road_access)}</div>}
+                {r.network_quality && <div>Network: {display(r.network_quality)}</div>}
+                {r.security_experience && (
+                  <div>Security: {display(r.security_experience)}</div>
+                )}
+              </dl>
+              {r.comment && (
+                <p className="mt-1 text-zinc-600">“{r.comment}”</p>
+              )}
             </li>
           ))}
         </ul>
