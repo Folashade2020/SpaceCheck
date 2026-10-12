@@ -63,7 +63,10 @@ jobs:
           BT=$(ls -d $ANDROID_HOME/build-tools/*/ | sort -V | tail -1)
           echo "$BT"
           echo "${{ secrets.ANDROID_KEYSTORE_BASE64 }}" | base64 -d > /tmp/release.keystore
-          for f in android/app/build/outputs/apk/release/app-release.apk android/app/build/outputs/bundle/release/app-release.aab; do
+          # Unsigned release APKs carry an -unsigned suffix; resolve real names.
+          APK=$(ls android/app/build/outputs/apk/release/*.apk | head -1)
+          AAB=android/app/build/outputs/bundle/release/app-release.aab
+          for f in "$APK" "$AAB"; do
             "$BT/zipalign" -f 4 "$f" /tmp/aligned-out 2>/dev/null || cp "$f" /tmp/aligned-out
             "$BT/apksigner" sign --ks /tmp/release.keystore \
               --ks-pass:env KEYSTORE_PASSWORD --ks-key-alias "$KEY_ALIAS" \
