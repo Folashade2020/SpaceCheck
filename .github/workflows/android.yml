@@ -18,5 +18,53 @@ jobs:
       - name: Checkout
         uses: actions/checkout@v4
 
+      - name: Setup Node
+        uses: actions/setup-node@v4
+        with:
+          node-version: "24"
+          cache: npm
+
+      - name: Install web dependencies
+        run: npm ci
+
+      - name: Sync Capacitor Android shell
+        run: npx cap sync android
+        env:
+          CAPACITOR_SERVER_URL: ${{ secrets.APP_URL }}
+
+      - name: Setup JDK
+        uses: actions/setup-java@v4
+        with:
+          distribution: temurin
+          java-version: "17"
+
+      - name: Setup Android SDK
+        uses: android-actions/setup-android@v3
+
+      - name: Accept licenses
+        run: yes | sdkmanager --licenses
+
+      - name: Build debug APK
+        working-directory: android
+        run: ./gradlew assembleDebug --stacktrace
+
+      - name: Build release APK and AAB
+        working-directory: android
+        run: ./gradlew assembleRelease bundleRelease --stacktrace
+
+      - name: Rename artifacts
+        run: |
+          mkdir -p dist
+          cp android/app/build/outputs/apk/debug/app-debug.apk dist/SpaceCheck-debug.apk
+          cp android/app/build/outputs/apk/release/app-release.apk dist/SpaceCheck-release.apk
+          cp android/app/build/outputs/bundle/release/app-release.aab dist/SpaceCheck-release.aab
+          ls -la dist
+
+      - name: Upload artifacts
+        uses: actions/upload-artifact@v4
+        with:
+          name: spacecheck-android
+          path: dist/
+
       - name: Probe
         run: echo probe-ok
