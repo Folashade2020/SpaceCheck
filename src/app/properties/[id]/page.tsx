@@ -2,6 +2,8 @@ import { createClient } from "@/lib/supabase/server";
 import { notFound } from "next/navigation";
 import Link from "next/link";
 import { calculateFitScore, type PriorityKey } from "@/lib/fitScore";
+import { saveProperty, unsaveProperty, requestViewing } from "./actions";
+import ShareButton from "./share-button";
 
 function display(value: unknown) {
   if (value === null || value === undefined || value === "") {
@@ -12,10 +14,13 @@ function display(value: unknown) {
 
 export default async function PropertyPage({
   params,
+  searchParams,
 }: {
   params: Promise<{ id: string }>;
+  searchParams: Promise<{ error?: string; viewing?: string }>;
 }) {
   const { id } = await params;
+  const { error: queryError, viewing } = await searchParams;
   const supabase = await createClient();
 
   const { data: property, error } = await supabase
@@ -87,8 +92,75 @@ export default async function PropertyPage({
   }
   const fit = calculateFitScore(property, prefs);
 
+  // Save state + share text (PRD Sec 24: share includes score + warnings).
+  let isSaved = false;
+  if (user) {
+    const { data: save } = await supabase
+      .from("saves")
+      .select("id")
+      .eq("user_id", user.id)
+      .eq("property_id", id)
+      .maybeSingle();
+    isSaved = !!save;
+  }
+  const shareText = [
+    `${display(property.property_type)} · ${display(property.bedrooms)} bed · ₦${display(property.rent)} · ${display(property.general_area)}`,
+    fit.score !== null
+      ? `Fit: ${fit.score}/100 (${fit.confidence} confidence)`
+      : "Fit: no score yet",
+    fit.reasons.length > 0 ? `Good: ${fit.reasons.slice(0, 2).join("; ")}` : "",
+    fit.concerns.length > 0 ? `Watch: ${fit.concerns.slice(0, 2).join("; ")}` : "",
+    `SpaceCheck: know what you're moving into.`,
+  ]
+    .filter(Boolean)
+    .join("\n");
+
   return (
     <div className="space-y-4">
+      <div className="flex items-center justify-between">
+        <Link href="/search" className="text-sm underline">
+          ← Back to search
+        </Link>
+        <div className="flex gap-2">
+          <ShareButton text={shareText} />
+          {user ? (
+            isSaved ? (
+              <form action={unsaveProperty.bind(null, id)}>
+                <button
+                  type="submit"
+                  className="rounded-full border px-3 py-1 text-xs hover:bg-zinc-100"
+                >
+                  ★ Saved
+                </button>
+              </form>
+            ) : (
+              <form action={saveProperty.bind(null, id)}>
+                <button
+                  type="submit"
+                  className="rounded-full border px-3 py-1 text-xs hover:bg-zinc-100"
+                >
+                  ☆ Save
+                </button>
+              </form>
+            )
+          ) : (
+            <Link
+              href="/login"
+              className="rounded-full border px-3 py-1 text-xs hover:bg-zinc-100"
+            >
+              ☆ Save
+            </Link>
+          )}
+        </div>
+      </div>
+      {queryError && (
+        <p className="rounded bg-red-50 p-2 text-sm text-red-700">{queryError}</p>
+      )}
+      {viewing === "requested" && (
+        <p className="rounded bg-green-50 p-2 text-sm text-green-800">
+          Viewing requested. The owner/agent will contact you.
+        </p>
+      )}
       <div className="rounded-2xl bg-white p-6 shadow-sm">
         <p className="text-xs font-semibold text-zinc-500">
           Section 1 — The Property · {display(effectiveStatus)}
@@ -215,6 +287,42 @@ export default async function PropertyPage({
             </li>
           ))}
         </ul>
+      </div>
+
+      <div className="rounded-2xl bg-white p-6 shadow-sm">
+        <p className="text-xs font-semibold text-zinc-500">
+          Contact + Viewing
+        </p>
+        <p className="mt-1 text-sm text-zinc-600">
+          Contact: {display(property.contact_name)} · Exact phone/address are
+          shared only when the owner accepts your viewing request (privacy first).
+        </p>
+        {user ? (
+          <form action={requestViewing.bind(null, id)} className="mt-3 space-y-2">
+            <label className="block text-sm font-medium text-zinc-900">
+              Message to owner/agent (optional)
+              <textarea
+                name="message"
+                rows={2}
+                placeholder="e.g. Free to inspect Saturday morning"
+                className="mt-1 w-full rounded border border-zinc-300 bg-white px-3 py-2 text-zinc-900 placeholder:text-zinc-400 focus:outline-none focus:ring-2 focus:ring-zinc-900"
+              />
+            </label>
+            <button
+              type="submit"
+              className="rounded-full bg-zinc-900 px-5 py-2 text-sm text-white"
+            >
+              Request a Viewing
+            </button>
+          </form>
+        ) : (
+          <Link
+            href="/login"
+            className="mt-3 inline-block rounded-full bg-zinc-900 px-5 py-2 text-sm text-white"
+          >
+            Log in to request a viewing
+          </Link>
+        )}
       </div>
     </div>
   );

@@ -35,6 +35,29 @@ export default async function DashboardPage() {
     .eq("reporter_id", user.id)
     .limit(50);
 
+  const { data: savedRows } = await supabase
+    .from("saves")
+    .select("property_id")
+    .eq("user_id", user.id)
+    .limit(20);
+
+  const savedIds = (savedRows ?? []).map((s) => s.property_id);
+  let savedProps: { id: string; property_type: string | null; general_area: string | null; rent: number | null }[] = [];
+  if (savedIds.length > 0) {
+    const { data } = await supabase
+      .from("property_public")
+      .select("id, property_type, general_area, rent")
+      .in("id", savedIds);
+    savedProps = data ?? [];
+  }
+
+  const { data: myRequests } = await supabase
+    .from("viewing_requests")
+    .select("id, property_id, status, created_at")
+    .eq("user_id", user.id)
+    .order("created_at", { ascending: false })
+    .limit(10);
+
   return (
     <div className="space-y-4">
       <div className="rounded-2xl bg-white p-6 shadow-sm">
@@ -64,12 +87,42 @@ export default async function DashboardPage() {
       </div>
 
       <div className="rounded-2xl bg-white p-6 shadow-sm">
-        <h2 className="font-semibold">Next steps (Phase 1)</h2>
-        <ul className="mt-2 list-disc pl-5 text-sm text-zinc-600">
-          <li>Submit a property (owner/agent)</li>
-          <li>Set renter preferences</li>
-          <li>See Property Fit Score with confidence</li>
-        </ul>
+        <h2 className="font-semibold">Saved properties ({savedProps.length})</h2>
+        {savedProps.length === 0 ? (
+          <p className="mt-1 text-sm text-zinc-600">
+            Nothing saved yet. Open a property and tap ☆ Save.
+          </p>
+        ) : (
+          <ul className="mt-2 space-y-1 text-sm">
+            {savedProps.map((p) => (
+              <li key={p.id}>
+                <Link href={`/properties/${p.id}`} className="underline">
+                  {p.property_type ?? "Property"} · {p.general_area ?? "area"} · ₦{p.rent ?? "?"}
+                </Link>
+              </li>
+            ))}
+          </ul>
+        )}
+      </div>
+
+      <div className="rounded-2xl bg-white p-6 shadow-sm">
+        <h2 className="font-semibold">My viewing requests ({myRequests?.length ?? 0})</h2>
+        {(myRequests ?? []).length === 0 ? (
+          <p className="mt-1 text-sm text-zinc-600">
+            No requests yet. Open a property and tap Request a Viewing.
+          </p>
+        ) : (
+          <ul className="mt-2 space-y-1 text-sm text-zinc-600">
+            {(myRequests ?? []).map((r) => (
+              <li key={r.id}>
+                <Link href={`/properties/${r.property_id}`} className="underline">
+                  Property
+                </Link>{" "}
+                · {r.status} · {new Date(r.created_at).toLocaleDateString()}
+              </li>
+            ))}
+          </ul>
+        )}
       </div>
     </div>
   );
