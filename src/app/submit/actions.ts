@@ -29,11 +29,19 @@ export async function createProperty(formData: FormData) {
   const propertyType = str("property_type");
   const bedrooms = num("bedrooms");
   const rent = num("rent");
-  const district = str("district");
-  const neighborhood = str("neighborhood");
+  let district = str("district");
+  let neighborhood = str("neighborhood");
+  if (district === "__other") district = str("district_other");
+  if (neighborhood === "__other") neighborhood = str("neighborhood_other");
 
-  if (!propertyType || bedrooms === null || rent === null || !district || !neighborhood) {
-    redirect("/submit?error=Property+type%2C+bedrooms%2C+rent%2C+district+and+neighborhood+are+required");
+  const missing: string[] = [];
+  if (!propertyType) missing.push("property type");
+  if (bedrooms === null) missing.push("bedrooms");
+  if (rent === null) missing.push("rent");
+  if (!district || district === "__other") missing.push("district");
+  if (!neighborhood || neighborhood === "__other") missing.push("neighbourhood");
+  if (missing.length > 0) {
+    redirect(`/submit?error=${encodeURIComponent(`Still needed: ${missing.join(", ")}`)}`);
   }
 
   if (formData.get("ndpa_consent") !== "on") {
@@ -42,8 +50,15 @@ export async function createProperty(formData: FormData) {
 
   const living: Record<string, string | null> = {};
   for (const key of ["electricity", "flood", "water", "road_access", "network_quality"]) {
-    const v = str(key);
-    if (!isAllowed(key, v)) {
+    let v = str(key);
+    if (v === "Other (type it)") {
+      // Free text is only accepted through the explicit Other path.
+      v = str(`${key}_other`);
+      if (v && v.length > 120) v = v.slice(0, 120);
+      if (!v) {
+        redirect(`/submit?error=${encodeURIComponent(`You picked Other for ${key} - please describe it`)}`);
+      }
+    } else if (!isAllowed(key, v)) {
       redirect("/submit?error=Invalid+value+for+" + key);
     }
     living[key] = v;

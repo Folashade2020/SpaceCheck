@@ -13,39 +13,63 @@ function ChipGroup({
   options,
   value,
   onChange,
+  otherValue,
+  onOtherChange,
 }: {
   name: string;
   options: readonly string[];
   value: string;
   onChange: (v: string) => void;
+  otherValue: string;
+  onOtherChange: (v: string) => void;
 }) {
+  const OTHER = "Other (type it)";
+  const showOther = value === OTHER;
   return (
-    <div style={{ display: "flex", flexWrap: "wrap", gap: "0.45rem" }} role="radiogroup" aria-label={name}>
-      {options.map((opt) => {
-        const selected = value === opt;
-        return (
-          <button
-            key={opt}
-            type="button"
-            role="radio"
-            aria-checked={selected}
-            onClick={() => onChange(selected ? "" : opt)}
-            style={{
-              fontSize: "0.8rem",
-              fontWeight: 600,
-              borderRadius: 999,
-              padding: "0.42rem 0.85rem",
-              border: selected ? "2px solid #00a86b" : "1px solid #cbd5e1",
-              background: selected ? "#ecfdf5" : "#fff",
-              color: selected ? "#007a4d" : "#334155",
-              cursor: "pointer",
-            }}
-          >
-            {selected ? "+ " : ""}{opt}
-          </button>
-        );
-      })}
-      <input type="hidden" name={name} value={value} />
+    <div>
+      <div style={{ display: "flex", flexWrap: "wrap", gap: "0.45rem" }} role="radiogroup" aria-label={name}>
+        {[...options, OTHER].map((opt) => {
+          const selected = value === opt;
+          return (
+            <button
+              key={opt}
+              type="button"
+              role="radio"
+              aria-checked={selected}
+              onClick={() => {
+                onChange(selected ? "" : opt);
+                if (selected) onOtherChange("");
+              }}
+              style={{
+                fontSize: "0.8rem",
+                fontWeight: 600,
+                borderRadius: 999,
+                padding: "0.42rem 0.85rem",
+                border: selected ? "2px solid #00a86b" : "1px solid #cbd5e1",
+                background: selected ? "#ecfdf5" : "#fff",
+                color: selected ? "#007a4d" : "#334155",
+                cursor: "pointer",
+              }}
+            >
+              {selected ? "+ " : ""}{opt}
+            </button>
+          );
+        })}
+        <input type="hidden" name={name} value={value} />
+      </div>
+      {showOther && (
+        <input
+          name={`${name}_other`}
+          value={otherValue}
+          onChange={(e) => onOtherChange(e.target.value)}
+          required
+          maxLength={120}
+          placeholder="Describe it in a few words"
+          className="input"
+          style={{ marginTop: "0.5rem" }}
+          aria-label={`${name} - describe other`}
+        />
+      )}
     </div>
   );
 }
@@ -126,6 +150,9 @@ function Dropzone() {
 export default function SubmitWizard() {
   const [step, setStep] = useState(0);
   const [chips, setChips] = useState<Record<string, string>>({});
+  const [chipOther, setChipOther] = useState<Record<string, string>>({});
+  const [district, setDistrict] = useState("");
+  const [neighborhood, setNeighborhood] = useState("");
   const stepRef = useRef<HTMLDivElement>(null);
 
   function goNext() {
@@ -157,7 +184,16 @@ export default function SubmitWizard() {
         ))}
       </ol>
 
-      <form action={createProperty}>
+      <form
+        action={createProperty}
+        onSubmit={(e) => {
+          // Stop Enter-key submits on early steps from posting half the form.
+          if (step < STEPS.length - 1) {
+            e.preventDefault();
+            goNext();
+          }
+        }}
+      >
         <div ref={stepRef}>
           {step === 0 && (
             <fieldset className="card" style={{ padding: "1.4rem", display: "flex", flexDirection: "column", gap: "0.8rem" }}>
@@ -200,23 +236,52 @@ export default function SubmitWizard() {
               <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: "0.7rem" }}>
                 <label className="label">
                   District *
-                  <select name="district" required className="input" defaultValue="">
+                  <select
+                    name="district"
+                    required
+                    className="input"
+                    value={district}
+                    onChange={(e) => {
+                      setDistrict(e.target.value);
+                      setNeighborhood("");
+                    }}
+                  >
                     <option value="">Select...</option>
                     {Object.keys(DISTRICTS).map((d) => <option key={d} value={d}>{d}</option>)}
+                    <option value="__other">Other (type it)</option>
                   </select>
                 </label>
                 <label className="label">
                   Neighbourhood *
-                  <select name="neighborhood" required className="input" defaultValue="">
+                  <select
+                    name="neighborhood"
+                    required
+                    className="input"
+                    value={neighborhood}
+                    onChange={(e) => setNeighborhood(e.target.value)}
+                  >
                     <option value="">Select...</option>
                     {Object.entries(DISTRICTS).map(([d, areas]) => (
                       <optgroup key={d} label={d}>
                         {areas.map((a) => <option key={`${d}-${a}`} value={a}>{a}</option>)}
                       </optgroup>
                     ))}
+                    <option value="__other">Other (type it)</option>
                   </select>
                 </label>
               </div>
+              {district === "__other" && (
+                <label className="label">
+                  Your district *
+                  <input name="district_other" required maxLength={60} placeholder="e.g. Epe" className="input" />
+                </label>
+              )}
+              {neighborhood === "__other" && (
+                <label className="label">
+                  Your neighbourhood / area *
+                  <input name="neighborhood_other" required maxLength={60} placeholder="e.g. Oke-Odo" className="input" />
+                </label>
+              )}
               <label className="label">
                 Estate (optional)
                 <input name="estate" placeholder="e.g. Ocean Palm Estate" className="input" />
@@ -242,7 +307,14 @@ export default function SubmitWizard() {
               {LIVING_FIELDS.map((f) => (
                 <div key={f.key}>
                   <p className="label" style={{ marginBottom: "0.35rem" }}>{f.label}</p>
-                  <ChipGroup name={f.key} options={f.options} value={chips[f.key] ?? ""} onChange={(v) => setChips((c) => ({ ...c, [f.key]: v }))} />
+                  <ChipGroup
+                    name={f.key}
+                    options={f.options}
+                    value={chips[f.key] ?? ""}
+                    onChange={(v) => setChips((c) => ({ ...c, [f.key]: v }))}
+                    otherValue={chipOther[f.key] ?? ""}
+                    onOtherChange={(v) => setChipOther((c) => ({ ...c, [f.key]: v }))}
+                  />
                 </div>
               ))}
               <label className="label">
