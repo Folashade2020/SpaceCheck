@@ -1,23 +1,11 @@
 "use client";
 
-import Link from "next/link";
 import { useState } from "react";
 import { logout } from "@/app/auth/actions";
+import { MobileNavMenu } from "./NavLinks";
 
 export default function MobileNav({ loggedIn }: { loggedIn: boolean }) {
   const [open, setOpen] = useState(false);
-  const links = loggedIn
-    ? [
-        { href: "/search", label: "Search" },
-        { href: "/submit", label: "List property" },
-        { href: "/preferences", label: "Preferences" },
-        { href: "/dashboard", label: "Dashboard" },
-      ]
-    : [
-        { href: "/search", label: "Search" },
-        { href: "/login", label: "Log in" },
-        { href: "/signup", label: "Sign up" },
-      ];
 
   return (
     <div className="md:hidden">
@@ -50,17 +38,9 @@ export default function MobileNav({ loggedIn }: { loggedIn: boolean }) {
             flexDirection: "column",
             gap: "0.2rem",
           }}
+          onClick={() => setOpen(false)}
         >
-          {links.map((l) => (
-            <Link
-              key={l.href}
-              href={l.href}
-              onClick={() => setOpen(false)}
-              style={{ padding: "0.55rem 0.7rem", borderRadius: 8, fontWeight: 600 }}
-            >
-              {l.label}
-            </Link>
-          ))}
+          <MobileNavMenu loggedIn={loggedIn} />
           {loggedIn && (
             <form action={logout}>
               <button

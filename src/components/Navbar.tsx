@@ -1,8 +1,8 @@
 import Link from "next/link";
 import { createClient } from "@/lib/supabase/server";
-import { logout } from "@/app/auth/actions";
 import { BrandMark } from "./ui";
 import MobileNav from "./MobileNav";
+import { DesktopNav } from "./NavLinks";
 
 export default async function Navbar() {
   const supabase = await createClient();
@@ -30,38 +30,7 @@ export default async function Navbar() {
             SpaceCheck
           </span>
         </Link>
-        <div className="hidden items-center gap-4 text-sm md:flex">
-          <Link href="/search" style={{ fontWeight: 600 }}>
-            Search
-          </Link>
-          {user ? (
-            <>
-              <Link href="/submit" style={{ fontWeight: 600 }}>
-                List property
-              </Link>
-              <Link href="/preferences" style={{ fontWeight: 600 }}>
-                Preferences
-              </Link>
-              <Link href="/dashboard" style={{ fontWeight: 600 }}>
-                Dashboard
-              </Link>
-              <form action={logout}>
-                <button type="submit" className="btn-secondary btn-sm">
-                  Log out
-                </button>
-              </form>
-            </>
-          ) : (
-            <>
-              <Link href="/login" style={{ fontWeight: 600 }}>
-                Log in
-              </Link>
-              <Link href="/signup" className="btn-primary btn-sm">
-                Sign up free
-              </Link>
-            </>
-          )}
-        </div>
+        <DesktopNav loggedIn={!!user} />
         <MobileNav loggedIn={!!user} />
       </nav>
     </header>
