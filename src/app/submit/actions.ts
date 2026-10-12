@@ -3,6 +3,7 @@
 import { redirect } from "next/navigation";
 import { revalidatePath } from "next/cache";
 import { createClient } from "@/lib/supabase/server";
+import { isAllowed } from "@/lib/options";
 
 export async function createProperty(formData: FormData) {
   const supabase = await createClient();
@@ -35,6 +36,14 @@ export async function createProperty(formData: FormData) {
     redirect("/submit?error=Property+type%2C+bedrooms%2C+rent%2C+district+and+neighborhood+are+required");
   }
 
+  const living: Record<string, string | null> = {};
+  for (const key of ["electricity", "flood", "water", "road_access", "network_quality"]) {
+    const v = str(key);
+    if (!isAllowed(key, v)) {
+      redirect("/submit?error=Invalid+value+for+" + key);
+    }
+    living[key] = v;
+  }
   const photoRaw = String(formData.get("photo_urls") ?? "");
   const urlPhotos = photoRaw
     .split("\n")
@@ -79,11 +88,11 @@ export async function createProperty(formData: FormData) {
       photos,
       contact_name: str("contact_name"),
       contact_phone: str("contact_phone"),
-      electricity: str("electricity"),
-      flood: str("flood"),
-      water: str("water"),
-      road_access: str("road_access"),
-      network_quality: str("network_quality"),
+      electricity: living.electricity,
+      flood: living.flood,
+      water: living.water,
+      road_access: living.road_access,
+      network_quality: living.network_quality,
       security_features: str("security_features"),
       nearby_places: str("nearby_places"),
       // Private: never rendered publicly. Stored for future verified viewing flow.
