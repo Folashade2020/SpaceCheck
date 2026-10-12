@@ -69,15 +69,20 @@ jobs:
           printenv KEYSTORE_PASSWORD > /tmp/kspass
           printenv KEY_PASSWORD > /tmp/kypass
           chmod 600 /tmp/kspass /tmp/kypass
-          for f in "$APK" "$AAB"; do
-            "$BT/zipalign" -f 4 "$f" /tmp/aligned-out 2>/dev/null || cp "$f" /tmp/aligned-out
-            "$BT/apksigner" sign --ks /tmp/release.keystore \
-              --ks-pass file:/tmp/kspass --ks-key-alias "$KEY_ALIAS" \
-              --key-pass file:/tmp/kypass --out "$f.signed" /tmp/aligned-out
-            mv "$f.signed" "$f"
-            if [ "${f##*.}" = "apk" ]; then "$BT/apksigner" verify --print-certs "$f" | head -3; fi
-          done
-          rm -f /tmp/release.keystore /tmp/aligned-out /tmp/kspass /tmp/kypass
+          # APK: align + v2 sign with apksigner
+          "$BT/zipalign" -f 4 "$APK" /tmp/aligned.apk
+          "$BT/apksigner" sign --ks /tmp/release.keystore \
+            --ks-pass file:/tmp/kspass --ks-key-alias "$KEY_ALIAS" \
+            --key-pass file:/tmp/kypass --out "${APK%.apk}-signed.apk" /tmp/aligned.apk
+          mv "${APK%.apk}-signed.apk" "$APK"
+          "$BT/apksigner" verify --print-certs "$APK" | head -3
+          # AAB: sign with jarsigner (apksigner is APK-only)
+          "$JAVA_HOME/bin/jarsigner" -keystore /tmp/release.keystore \
+            -storepass:file /tmp/kspass -keypass:file /tmp/kypass \
+            -signedjar "${AAB%.aab}-signed.aab" "$AAB" "$KEY_ALIAS"
+          mv "${AAB%.aab}-signed.aab" "$AAB"
+          "$JAVA_HOME/bin/jarsigner" -verify "$AAB" | head -3
+          rm -f /tmp/release.keystore /tmp/aligned.apk /tmp/kspass /tmp/kypass
         env:
           KEYSTORE_PASSWORD: ${{ secrets.KEYSTORE_PASSWORD }}
           KEY_ALIAS: ${{ secrets.KEY_ALIAS }}
