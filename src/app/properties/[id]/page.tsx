@@ -170,9 +170,15 @@ export default async function PropertyPage({
         </h1>
         <p className="mt-1 text-sm text-zinc-600">
           Rent: ₦{display(property.rent)} · Area:{" "}
-          {display(property.general_area)} · Availability:{" "}
+          {display(property.neighborhood ?? property.general_area)}
+          {property.area ? `, ${display(property.area)}` : ""} · Availability:{" "}
           {display(property.availability)}
         </p>
+        {property.estate && (
+          <p className="mt-1 text-sm text-zinc-600">
+            Estate: {display(property.estate)} (text only — no exact pin publicly)
+          </p>
+        )}
         <p className="mt-2 text-xs text-zinc-500">
           Privacy: exact address and exact coordinates are never shown publicly.
         </p>

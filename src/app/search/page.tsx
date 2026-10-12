@@ -90,7 +90,9 @@ export default async function SearchPage() {
             <div className="flex items-center justify-between">
               <p className="text-xs font-semibold text-zinc-500">
                 {display(p.verification_status)} ·{" "}
-                {display(p.general_area ?? p.area)}
+                {display(p.neighborhood ?? p.general_area)}
+                {p.area ? `, ${display(p.area)}` : ""}
+                {p.estate ? ` · ${display(p.estate)}` : ""}
               </p>
               {fit.score !== null ? (
                 <span className="rounded-full bg-zinc-900 px-2 py-0.5 text-xs text-white">

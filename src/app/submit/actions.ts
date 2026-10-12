@@ -28,10 +28,11 @@ export async function createProperty(formData: FormData) {
   const propertyType = str("property_type");
   const bedrooms = num("bedrooms");
   const rent = num("rent");
-  const generalArea = str("general_area");
+  const district = str("district");
+  const neighborhood = str("neighborhood");
 
-  if (!propertyType || bedrooms === null || rent === null || !generalArea) {
-    redirect("/submit?error=Property+type%2C+bedrooms%2C+rent+and+general+area+are+required");
+  if (!propertyType || bedrooms === null || rent === null || !district || !neighborhood) {
+    redirect("/submit?error=Property+type%2C+bedrooms%2C+rent%2C+district+and+neighborhood+are+required");
   }
 
   const photoRaw = String(formData.get("photo_urls") ?? "");
@@ -49,7 +50,10 @@ export async function createProperty(formData: FormData) {
       bedrooms,
       bathrooms: num("bathrooms"),
       rent,
-      general_area: generalArea,
+      area: district,
+      general_area: neighborhood,
+      neighborhood,
+      estate: str("estate"),
       availability: str("availability") ?? "Available",
       verification_status: "Limited information",
       photos,

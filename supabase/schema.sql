@@ -23,6 +23,8 @@ create table if not exists public.properties (
   rent numeric,
   general_area text,
   area text,
+  neighborhood text,
+  estate text,
   availability text default 'Available',
   verification_status text default 'Limited information',
   photos text[] default '{}',
@@ -98,7 +100,8 @@ create table if not exists public.preferences (
 create or replace view public.property_public as
 select
   id, owner_id, property_type, bedrooms, bathrooms, rent,
-  general_area, area, availability, verification_status, photos,
+  general_area, area, neighborhood, estate,
+  availability, verification_status, photos,
   contact_name,
   electricity, flood, water, road_access, network_quality,
   security_features, nearby_places,

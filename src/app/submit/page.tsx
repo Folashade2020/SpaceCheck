@@ -1,6 +1,7 @@
 import { redirect } from "next/navigation";
 import { createClient } from "@/lib/supabase/server";
 import { createProperty } from "./actions";
+import { DISTRICTS } from "@/lib/locations";
 
 const inputClass =
   "mt-1 w-full rounded border border-zinc-300 bg-white px-3 py-2 text-zinc-900 placeholder:text-zinc-400 focus:outline-none focus:ring-2 focus:ring-zinc-900";
@@ -110,12 +111,41 @@ export default async function SubmitPage({
             type="number"
             placeholder="1500000"
           />
+          <div className="grid grid-cols-2 gap-3">
+            <label className="block text-sm font-medium text-zinc-900">
+              District <span className="text-red-600">*</span>
+              <select name="district" required className={inputClass} defaultValue="">
+                <option value="">Select…</option>
+                {Object.keys(DISTRICTS).map((d) => (
+                  <option key={d} value={d}>
+                    {d}
+                  </option>
+                ))}
+              </select>
+            </label>
+            <label className="block text-sm font-medium text-zinc-900">
+              Neighborhood / Area <span className="text-red-600">*</span>
+              <select name="neighborhood" required className={inputClass} defaultValue="">
+                <option value="">Select…</option>
+                {Object.entries(DISTRICTS).map(([district, areas]) => (
+                  <optgroup key={district} label={district}>
+                    {areas.map((a) => (
+                      <option key={`${district}-${a}`} value={a}>
+                        {a}
+                      </option>
+                    ))}
+                  </optgroup>
+                ))}
+              </select>
+              <span className="mt-1 block text-xs text-zinc-500">
+                Public (e.g. Opebi, Allen Avenue). Narrow areas give better accuracy.
+              </span>
+            </label>
+          </div>
           <Field
-            label="General area"
-            name="general_area"
-            required
-            placeholder="e.g. Lekki Phase 1, Yaba, Ikeja"
-            hint="Public. Never enter a full street address here."
+            label="Estate (optional)"
+            name="estate"
+            placeholder="e.g. XYZ Estate — public text, no pin"
           />
           <label className="block text-sm font-medium text-zinc-900">
             Availability

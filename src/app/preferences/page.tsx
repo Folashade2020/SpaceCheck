@@ -56,7 +56,7 @@ export default async function PreferencesPage({
           Where are you looking? (comma separated)
           <input
             name="areas"
-            placeholder="e.g. Lekki, Yaba, Ikeja"
+            placeholder="e.g. Opebi, Allen Avenue, Lekki Phase 1"
             defaultValue={(prefs?.areas ?? []).join(", ")}
             className={inputClass}
           />
