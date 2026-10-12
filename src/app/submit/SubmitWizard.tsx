@@ -158,9 +158,11 @@ export default function SubmitWizard() {
   function goNext() {
     const root = stepRef.current;
     if (root) {
-      const fields = root.querySelectorAll<HTMLInputElement | HTMLSelectElement>("input[required], select[required]");
+      const active = root.querySelector(`[data-step="${step}"]`);
+      const scope = active ?? root;
+      const fields = scope.querySelectorAll<HTMLInputElement | HTMLSelectElement>("input[required], select[required]");
       for (const el of fields) {
-        if (!el.checkValidity()) {
+        if (el.offsetParent !== null && !el.checkValidity()) {
           el.reportValidity();
           return;
         }
@@ -195,7 +197,9 @@ export default function SubmitWizard() {
         }}
       >
         <div ref={stepRef}>
-          {step === 0 && (
+          {/* All steps stay mounted (hidden) so values are never lost on submit. */}
+          <div data-step={0} hidden={step !== 0}>
+          {(
             <fieldset className="card" style={{ padding: "1.4rem", display: "flex", flexDirection: "column", gap: "0.8rem" }}>
               <legend style={{ fontWeight: 800, fontSize: "1.05rem", padding: "0 0.4rem" }}>The basics</legend>
               <label className="label">
@@ -229,8 +233,10 @@ export default function SubmitWizard() {
               </label>
             </fieldset>
           )}
+          </div>
 
-          {step === 1 && (
+          <div data-step={1} hidden={step !== 1}>
+          {(
             <fieldset className="card" style={{ padding: "1.4rem", display: "flex", flexDirection: "column", gap: "0.8rem" }}>
               <legend style={{ fontWeight: 800, fontSize: "1.05rem", padding: "0 0.4rem" }}>Narrow location</legend>
               <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: "0.7rem" }}>
@@ -297,8 +303,10 @@ export default function SubmitWizard() {
               </div>
             </fieldset>
           )}
+          </div>
 
-          {step === 2 && (
+          <div data-step={2} hidden={step !== 2}>
+          {(
             <fieldset className="card" style={{ padding: "1.4rem", display: "flex", flexDirection: "column", gap: "0.9rem" }}>
               <legend style={{ fontWeight: 800, fontSize: "1.05rem", padding: "0 0.4rem" }}>Living conditions</legend>
               <p style={{ fontSize: "0.85rem", color: "#475569" }}>
@@ -327,8 +335,10 @@ export default function SubmitWizard() {
               </label>
             </fieldset>
           )}
+          </div>
 
-          {step === 3 && (
+          <div data-step={3} hidden={step !== 3}>
+          {(
             <fieldset className="card" style={{ padding: "1.4rem", display: "flex", flexDirection: "column", gap: "0.8rem" }}>
               <legend style={{ fontWeight: 800, fontSize: "1.05rem", padding: "0 0.4rem" }}>Contact & photos</legend>
               <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: "0.7rem" }}>
@@ -352,6 +362,7 @@ export default function SubmitWizard() {
               <NdpaConsent />
             </fieldset>
           )}
+          </div>
         </div>
 
         <div style={{ marginTop: "1rem", display: "flex", justifyContent: "space-between", gap: "0.6rem" }}>
