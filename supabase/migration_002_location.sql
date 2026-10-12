@@ -11,7 +11,10 @@ set neighborhood = general_area
 where neighborhood is null and general_area is not null;
 
 -- Public view now exposes neighborhood + estate (street/exact stay private).
-create or replace view public.property_public as
+-- NOTE: DROP + CREATE (not OR REPLACE) because Postgres forbids changing
+-- existing view column order with OR REPLACE (error 42P16).
+drop view if exists public.property_public;
+create view public.property_public as
 select
   id, owner_id, property_type, bedrooms, bathrooms, rent,
   general_area, area, neighborhood, estate,
