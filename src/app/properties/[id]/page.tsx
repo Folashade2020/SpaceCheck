@@ -205,6 +205,20 @@ export default async function PropertyPage({
         <h1 className="mt-1 text-2xl font-bold">
           {display(property.property_type)} · {display(property.bedrooms)} bed
         </h1>
+        {Array.isArray(property.photos) && property.photos.length > 0 && (
+          <div className="mt-3 grid grid-cols-3 gap-2">
+            {(property.photos as string[]).slice(0, 6).map((src) => (
+              // Plain img: remote hosts vary, avoids next.config remotePatterns.
+              <img
+                key={src}
+                src={src}
+                alt="Property photo"
+                className="h-28 w-full rounded-lg border object-cover"
+                loading="lazy"
+              />
+            ))}
+          </div>
+        )}
         <p className="mt-1 text-sm text-zinc-600">
           Rent: ₦{display(property.rent)} · Area:{" "}
           {display(property.neighborhood ?? property.general_area)}

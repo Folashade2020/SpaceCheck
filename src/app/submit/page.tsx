@@ -181,16 +181,23 @@ export default async function SubmitPage({
             <Field name="contact_phone" label="Contact phone" placeholder="080…" />
           </div>
           <label className="block text-sm font-medium text-zinc-900">
-            Photo URLs (one per line, up to 10)
+            Upload photos (up to 5, images ≤2MB each)
+            <input
+              type="file"
+              name="photos"
+              accept="image/*"
+              multiple
+              className="mt-1 w-full rounded border border-zinc-300 bg-white px-3 py-2 text-zinc-900 file:mr-3 file:rounded-full file:border-0 file:bg-zinc-900 file:px-4 file:py-1 file:text-sm file:text-white"
+            />
+          </label>
+          <label className="block text-sm font-medium text-zinc-900">
+            …or photo URLs (one per line, up to 10 total with uploads)
             <textarea
               name="photo_urls"
-              rows={3}
+              rows={2}
               placeholder="https://…"
               className={inputClass}
             />
-            <span className="mt-1 block text-xs text-zinc-500">
-              File upload to storage arrives later. URLs keep Phase 1 free and simple.
-            </span>
           </label>
         </fieldset>
 

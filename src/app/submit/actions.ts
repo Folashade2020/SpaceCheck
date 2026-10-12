@@ -36,11 +36,31 @@ export async function createProperty(formData: FormData) {
   }
 
   const photoRaw = String(formData.get("photo_urls") ?? "");
-  const photos = photoRaw
+  const urlPhotos = photoRaw
     .split("\n")
     .map((s) => s.trim())
-    .filter(Boolean)
-    .slice(0, 10);
+    .filter(Boolean);
+
+  // File uploads: images only, ≤2MB each, max 5 files. Stored in the
+  // public 'property-photos' bucket under <user-id>/ for ownership RLS.
+  const uploaded: string[] = [];
+  const files = formData.getAll("photos").filter((f) => f instanceof File && f.size > 0) as File[];
+  for (const file of files.slice(0, 5)) {
+    if (!file.type.startsWith("image/")) continue;
+    if (file.size > 2 * 1024 * 1024) continue;
+    const safeName = file.name.replace(/[^a-zA-Z0-9._-]/g, "_");
+    const path = `${user.id}/${Date.now()}-${safeName}`;
+    const { error: uploadError } = await supabase.storage
+      .from("property-photos")
+      .upload(path, file, { contentType: file.type });
+    if (uploadError) continue;
+    const {
+      data: { publicUrl },
+    } = supabase.storage.from("property-photos").getPublicUrl(path);
+    uploaded.push(publicUrl);
+  }
+
+  const photos = [...uploaded, ...urlPhotos].slice(0, 10);
 
   const { data, error } = await supabase
     .from("properties")
