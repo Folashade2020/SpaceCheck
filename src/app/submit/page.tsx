@@ -1,7 +1,7 @@
 import { redirect } from "next/navigation";
 import { createClient } from "@/lib/supabase/server";
 import { createProperty } from "./actions";
-import { DISTRICTS } from "@/lib/locations";
+import { DISTRICTS, PROPERTY_TYPES } from "@/lib/locations";
 
 const inputClass =
   "mt-1 w-full rounded border border-zinc-300 bg-white px-3 py-2 text-zinc-900 placeholder:text-zinc-400 focus:outline-none focus:ring-2 focus:ring-zinc-900";
@@ -80,13 +80,9 @@ export default async function SubmitPage({
             Property type <span className="text-red-600">*</span>
             <select name="property_type" required className={inputClass}>
               <option value="">Select…</option>
-              <option value="Self-contained">Self-contained</option>
-              <option value="1 bedroom">1 bedroom</option>
-              <option value="2 bedroom">2 bedroom</option>
-              <option value="3 bedroom">3 bedroom</option>
-              <option value="Duplex">Duplex</option>
-              <option value="Bungalow">Bungalow</option>
-              <option value="Studio">Studio</option>
+              {PROPERTY_TYPES.map((t) => (
+                <option key={t} value={t}>{t}</option>
+              ))}
             </select>
           </label>
           <div className="grid grid-cols-2 gap-3">

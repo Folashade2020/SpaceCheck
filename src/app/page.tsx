@@ -1,203 +1,155 @@
 import Link from "next/link";
 import { BrandMark, EvidenceBadge } from "@/components/ui";
+import { DISTRICTS, PROPERTY_TYPES } from "@/lib/locations";
 
-const HOW_IT_WORKS = [
-  {
-    step: "1",
-    title: "Tell us what matters",
-    body: "Areas, budget, property type and priorities — flooding, electricity, water, road access, network, security signals.",
-  },
-  {
-    step: "2",
-    title: "See your Best Match",
-    body: "Every listing gets a personal Fit Score out of 100, with confidence shown separately. Missing information lowers confidence — never faked.",
-  },
-  {
-    step: "3",
-    title: "Read the intelligence report",
-    body: "Property facts, location conditions, estate and neighbourhood context, community experiences and what to verify before paying.",
-  },
-  {
-    step: "4",
-    title: "Visit, then give back",
-    body: "Request a viewing, inspect in person, and report what you found so the next renter decides better.",
-  },
-];
+const AREAS = ["Opebi", "Allen Avenue", "Sangotedo", "Lekki Phase 1", "Yaba", "Surulere", "Gbagada", "Ikoyi"];
 
 export default function Home() {
   return (
     <div style={{ display: "flex", flexDirection: "column", gap: "1.4rem" }}>
-      {/* Hero */}
+      {/* Hero with Zillow-style search */}
       <section
         className="card"
         style={{
-          padding: "clamp(1.6rem, 4vw, 3rem)",
+          padding: "clamp(1.8rem, 5vw, 3.2rem)",
           background: "#1C1917",
           borderColor: "#1C1917",
           color: "#FAF9F6",
-          position: "relative",
-          overflow: "hidden",
         }}
       >
-        <div style={{ maxWidth: 640 }}>
-          <p
-            style={{
-              display: "inline-flex",
-              alignItems: "center",
-              gap: "0.5rem",
-              fontSize: "0.78rem",
-              fontWeight: 700,
-              color: "#A7F3D0",
-              textTransform: "uppercase",
-              letterSpacing: "0.08em",
-            }}
-          >
-            <BrandMark size={22} /> Lagos · Residential rentals
-          </p>
-          <h1
-            style={{
-              marginTop: "0.8rem",
-              fontSize: "clamp(2rem, 5vw, 3.1rem)",
-              lineHeight: 1.08,
-              letterSpacing: "-0.02em",
-              fontWeight: 800,
-            }}
-          >
-            Check the space before you commit.
-          </h1>
-          <p style={{ marginTop: "0.9rem", color: "#D6D3D1", fontSize: "1.02rem", lineHeight: 1.6 }}>
-            SpaceCheck goes beyond photos and rent. Understand flooding,
-            electricity, water, road access and real resident experiences —
-            matched to what matters to <em>you</em>.
-          </p>
-          <div style={{ marginTop: "1.4rem", display: "flex", flexWrap: "wrap", gap: "0.7rem" }}>
-            <Link href="/search" className="btn-primary">
-              Find a property that fits me
-            </Link>
-            <Link
-              href="/signup"
-              className="btn-secondary"
-              style={{ borderColor: "#44403C", color: "#FAF9F6" }}
-            >
-              Create free account
-            </Link>
-          </div>
-          <p style={{ marginTop: "0.9rem", fontSize: "0.8rem", color: "#A8A29E" }}>
-            Unknown information is labelled “Not provided” — never invented.
-            Exact addresses are never published.
-          </p>
-        </div>
-      </section>
+        <p
+          style={{
+            display: "inline-flex",
+            alignItems: "center",
+            gap: "0.5rem",
+            fontSize: "0.78rem",
+            fontWeight: 700,
+            color: "#A7F3D0",
+            textTransform: "uppercase",
+            letterSpacing: "0.08em",
+          }}
+        >
+          <BrandMark size={22} /> Lagos · Residential rentals
+        </p>
+        <h1
+          style={{
+            marginTop: "0.8rem",
+            fontSize: "clamp(2.1rem, 5vw, 3.2rem)",
+            lineHeight: 1.06,
+            letterSpacing: "-0.02em",
+            fontWeight: 800,
+            maxWidth: 640,
+          }}
+        >
+          Check the space before you commit.
+        </h1>
+        <p style={{ marginTop: "0.8rem", color: "#D6D3D1", fontSize: "1rem", maxWidth: 600, lineHeight: 1.6 }}>
+          Photos tell you the rent. SpaceCheck tells you the flooding,
+          electricity, water, road access — and what residents actually
+          experienced.
+        </p>
 
-      {/* Search entry */}
-      <section className="card" style={{ padding: "1.2rem 1.4rem" }}>
         <form
           action="/search"
           method="get"
-          style={{ display: "flex", flexWrap: "wrap", gap: "0.6rem", alignItems: "center" }}
-        >
-          <label htmlFor="home-q" style={{ fontWeight: 700 }}>
-            Start with a neighbourhood:
-          </label>
-          <input
-            id="home-q"
-            name="q"
-            placeholder="e.g. Opebi, Sangotedo, Yaba"
-            className="input"
-            style={{ marginTop: 0, maxWidth: 320 }}
-          />
-          <button type="submit" className="btn-primary btn-sm" style={{ padding: "0.6rem 1.2rem" }}>
-            Search
-          </button>
-          <Link href="/preferences" style={{ fontSize: "0.85rem", fontWeight: 600, color: "#047857" }}>
-            or set preferences first →
-          </Link>
-        </form>
-      </section>
-
-      {/* How it works */}
-      <section>
-        <h2 style={{ fontSize: "1.3rem", fontWeight: 800, letterSpacing: "-0.01em" }}>
-          How SpaceCheck works
-        </h2>
-        <div
           style={{
-            marginTop: "0.8rem",
-            display: "grid",
-            gap: "0.8rem",
-            gridTemplateColumns: "repeat(auto-fit, minmax(220px, 1fr))",
+            marginTop: "1.3rem",
+            background: "#fff",
+            borderRadius: 14,
+            padding: "0.7rem",
+            display: "flex",
+            flexWrap: "wrap",
+            gap: "0.6rem",
+            alignItems: "end",
+            color: "#1c1917",
           }}
         >
-          {HOW_IT_WORKS.map((s) => (
-            <div key={s.step} className="card" style={{ padding: "1.1rem 1.2rem" }}>
-              <span className="badge badge-brand">Step {s.step}</span>
-              <h3 style={{ marginTop: "0.6rem", fontWeight: 750 }}>{s.title}</h3>
-              <p style={{ marginTop: "0.4rem", fontSize: "0.88rem", color: "#57534E", lineHeight: 1.55 }}>
-                {s.body}
-              </p>
-            </div>
+          <label style={{ flex: "2 1 200px", fontSize: "0.78rem", fontWeight: 700 }}>
+            LOCATION
+            <input name="q" placeholder="Area, estate or district…" className="input" list="sc-areas" />
+            <datalist id="sc-areas">
+              {Object.entries(DISTRICTS).map(([d, areas]) =>
+                areas.map((a) => <option key={`${d}-${a}`} value={a} />)
+              )}
+            </datalist>
+          </label>
+          <label style={{ flex: "1 1 150px", fontSize: "0.78rem", fontWeight: 700 }}>
+            TYPE
+            <select name="type" className="input" defaultValue="">
+              <option value="">Any type</option>
+              {PROPERTY_TYPES.map((t) => (
+                <option key={t} value={t}>{t}</option>
+              ))}
+            </select>
+          </label>
+          <label style={{ flex: "1 1 130px", fontSize: "0.78rem", fontWeight: 700 }}>
+            MAX / YEAR (₦)
+            <input name="max" type="number" placeholder="e.g. 2000000" className="input" />
+          </label>
+          <button type="submit" className="btn-primary">Search</button>
+        </form>
+        <div style={{ marginTop: "0.8rem", display: "flex", flexWrap: "wrap", gap: "0.45rem" }}>
+          {AREAS.map((a) => (
+            <Link
+              key={a}
+              href={`/search?q=${encodeURIComponent(a)}`}
+              style={{
+                fontSize: "0.8rem",
+                fontWeight: 600,
+                color: "#FAF9F6",
+                border: "1px solid #44403c",
+                borderRadius: 999,
+                padding: "0.3rem 0.8rem",
+              }}
+            >
+              {a}
+            </Link>
           ))}
         </div>
       </section>
 
-      {/* Intelligence preview */}
+      {/* Value strip */}
+      <section style={{ display: "grid", gap: "0.8rem", gridTemplateColumns: "repeat(auto-fit, minmax(220px, 1fr))" }}>
+        {[
+          { t: "Personal Fit Score", b: "Best Match for You ranks every listing against your budget, areas and priorities — with confidence shown separately." },
+          { t: "Estate & street context", b: "Opebi is not all of Ikeja. Reports keep their neighbourhood and estate scope, with dates and contributor types." },
+          { t: "Evidence labels", b: "Verified, owner-reported, community-reported or limited information — plus conflicts shown, never hidden." },
+        ].map((c) => (
+          <div key={c.t} className="card" style={{ padding: "1.1rem 1.2rem" }}>
+            <h2 style={{ fontWeight: 800 }}>{c.t}</h2>
+            <p style={{ marginTop: "0.4rem", fontSize: "0.88rem", color: "#57534e", lineHeight: 1.6 }}>{c.b}</p>
+          </div>
+        ))}
+      </section>
+
+      {/* How it works */}
       <section className="card" style={{ padding: "1.4rem" }}>
-        <div style={{ display: "flex", flexWrap: "wrap", gap: "1.2rem", alignItems: "center" }}>
-          <div style={{ flex: "1 1 260px" }}>
-            <h2 style={{ fontSize: "1.25rem", fontWeight: 800 }}>
-              The intelligence report is the product
-            </h2>
-            <p style={{ marginTop: "0.5rem", fontSize: "0.92rem", color: "#57534E", lineHeight: 1.6 }}>
-              Each property gets a structured report: your personal fit with
-              reasons, strengths and unmet needs, location and estate context,
-              concerns, missing information and checks to complete before
-              paying. The score measures fit to <em>your</em> stated
-              preferences — not overall quality or safety.
-            </p>
-            <div style={{ marginTop: "0.9rem", display: "flex", gap: "0.6rem", flexWrap: "wrap" }}>
-              <Link href="/search" className="btn-primary btn-sm">
-                Browse intelligence
-              </Link>
-              <Link href="/submit" className="btn-secondary btn-sm">
-                List a property
-              </Link>
-            </div>
-          </div>
-          <div
-            style={{
-              flex: "1 1 260px",
-              border: "1px solid #e7e5e4",
-              borderRadius: 12,
-              padding: "1rem 1.1rem",
-              background: "#FAF9F6",
-            }}
-          >
-            <p style={{ fontSize: "0.75rem", fontWeight: 700, color: "#78716c" }}>
-              EXAMPLE REPORT CARD
-            </p>
-            <p style={{ marginTop: "0.4rem", fontWeight: 800, fontSize: "1.4rem" }}>
-              82<span style={{ fontSize: "0.85rem", fontWeight: 600 }}>/100 fit</span>{" "}
-              <span style={{ fontSize: "0.75rem", fontWeight: 600, color: "#57534E" }}>
-                · Medium confidence
-              </span>
-            </p>
-            <ul style={{ marginTop: "0.5rem", fontSize: "0.85rem", color: "#44403c", lineHeight: 1.7 }}>
-              <li>✓ Within your budget</li>
-              <li>✓ In your preferred neighbourhood</li>
-              <li>! Flood information missing — verify</li>
-            </ul>
-          </div>
+        <h2 style={{ fontSize: "1.25rem", fontWeight: 800 }}>From search to signed rent, informed</h2>
+        <ol style={{ marginTop: "0.7rem", display: "grid", gap: "0.6rem", gridTemplateColumns: "repeat(auto-fit, minmax(200px, 1fr))", fontSize: "0.88rem", color: "#44403c" }}>
+          {[
+            "Set areas, budget and what matters (flood, power, water…).",
+            "Compare Fit Scores and dealbreakers side by side.",
+            "Open the intelligence report before travelling.",
+            "Visit, verify, then report back for the next renter.",
+          ].map((s, i) => (
+            <li key={i} style={{ borderLeft: "3px solid #047857", paddingLeft: "0.7rem" }}>
+              <strong>Step {i + 1}.</strong> {s}
+            </li>
+          ))}
+        </ol>
+        <div style={{ marginTop: "1rem", display: "flex", gap: "0.6rem", flexWrap: "wrap" }}>
+          <Link href="/search" className="btn-primary btn-sm">Start searching</Link>
+          <Link href="/preferences" className="btn-secondary btn-sm">Set my preferences</Link>
         </div>
       </section>
 
       {/* Evidence */}
       <section className="card" style={{ padding: "1.4rem" }}>
-        <h2 style={{ fontSize: "1.25rem", fontWeight: 800 }}>Evidence, not assumptions</h2>
-        <p style={{ marginTop: "0.4rem", fontSize: "0.9rem", color: "#57534E" }}>
-          Every fact carries its source. Paid promotion never changes a score
-          or hides negative information.
+        <h2 style={{ fontSize: "1.15rem", fontWeight: 800 }}>What “verified” means here</h2>
+        <p style={{ marginTop: "0.35rem", fontSize: "0.88rem", color: "#57534e" }}>
+          Unknown stays unknown. Promotion never changes a score.
         </p>
-        <div style={{ marginTop: "0.8rem", display: "flex", flexWrap: "wrap", gap: "0.5rem" }}>
+        <div style={{ marginTop: "0.7rem", display: "flex", flexWrap: "wrap", gap: "0.5rem" }}>
           <EvidenceBadge status="Verified" />
           <EvidenceBadge status="Owner-reported" />
           <EvidenceBadge status="Community reported" />

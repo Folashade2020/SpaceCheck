@@ -243,13 +243,20 @@ export default async function PropertyPage({
           <p style={{ marginTop: "0.3rem", fontSize: "1.25rem", fontWeight: 800, color: "#047857" }}>
             ₦{display(property.rent)} <span style={{ fontSize: "0.82rem", fontWeight: 500, color: "#78716c" }}>/ year · {display(property.availability)}</span>
           </p>
+          {Number.isFinite(Number(property.rent)) && (
+            <p style={{ fontSize: "0.82rem", color: "#78716c" }}>
+              ≈ ₦{Math.round(Number(property.rent) / 12).toLocaleString("en-NG")}/month equivalent (estimate — confirm payment terms with the lister)
+            </p>
+          )}
           <p style={{ marginTop: "0.5rem", fontSize: "0.78rem", color: "#78716c" }}>
             Exact address and coordinates are never published — general area only.
           </p>
         </div>
       </section>
 
-      {/* Signature intelligence report */}
+      {/* Signature intelligence report + facts + community */}
+      <div className="grid items-start gap-4 lg:grid-cols-[minmax(0,1fr)_330px]">
+      <div style={{ display: "flex", flexDirection: "column", gap: "1rem", minWidth: 0 }}>
       <section className="card" style={{ padding: "1.4rem", borderColor: "#047857", borderWidth: 2 }}>
         <p style={{ fontSize: "0.75rem", fontWeight: 800, color: "#047857", textTransform: "uppercase", letterSpacing: "0.08em" }}>
           SpaceCheck intelligence report
@@ -379,9 +386,15 @@ export default async function PropertyPage({
         )}
       </section>
 
-      {/* Contact + owner */}
+      {/* Contact + viewing (sticky booking card on desktop) */}
+      </div>
+      <aside style={{ position: "sticky", top: 76, display: "flex", flexDirection: "column", gap: "1rem" }}>
       <section className="card" style={{ padding: "1.3rem 1.4rem" }}>
-        <h2 style={{ fontWeight: 800, fontSize: "1.1rem" }}>Contact & viewing</h2>
+        <p style={{ fontSize: "1.3rem", fontWeight: 800 }}>₦{display(property.rent)} <span style={{ fontSize: "0.8rem", fontWeight: 500, color: "#78716c" }}>/ year</span></p>
+        <p style={{ fontSize: "0.83rem", color: "#57534e" }}>
+          {display(property.neighborhood ?? property.general_area)}{property.area ? `, ${display(property.area)}` : ""}
+        </p>
+        <h2 style={{ fontWeight: 800, fontSize: "1rem", marginTop: "0.7rem" }}>Contact & viewing</h2>
         <p style={{ marginTop: "0.35rem", fontSize: "0.87rem", color: "#57534e" }}>
           Contact: {display(property.contact_name)} · Phone/address are shared only when the owner accepts your request.
         </p>
@@ -402,7 +415,7 @@ export default async function PropertyPage({
 
       {isOwner && (
         <section className="card" style={{ padding: "1.3rem 1.4rem" }}>
-          <h2 style={{ fontWeight: 800, fontSize: "1.1rem" }}>Owner controls</h2>
+          <h2 style={{ fontWeight: 800, fontSize: "1rem" }}>Owner controls</h2>
           <form action={updateAvailability.bind(null, id)} style={{ marginTop: "0.6rem", display: "flex", gap: "0.5rem", flexWrap: "wrap" }}>
             <select name="availability" defaultValue={String(property.availability ?? "Available")} className="input" style={{ marginTop: 0, maxWidth: 240 }}>
               <option value="Available">Available</option>
@@ -427,6 +440,8 @@ export default async function PropertyPage({
           )}
         </section>
       )}
+      </aside>
+      </div>
     </div>
   );
 }
