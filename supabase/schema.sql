@@ -100,12 +100,13 @@ create table if not exists public.preferences (
 create or replace view public.property_public as
 select
   id, owner_id, property_type, bedrooms, bathrooms, rent,
-  general_area, area, neighborhood, estate,
+  general_area, area,
   availability, verification_status, photos,
   contact_name,
   electricity, flood, water, road_access, network_quality,
   security_features, nearby_places,
-  public_lat, public_lng, is_available, created_at
+  public_lat, public_lng, is_available, created_at,
+  neighborhood, estate
 from public.properties;
 
 -- Enable RLS
