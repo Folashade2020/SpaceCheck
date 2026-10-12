@@ -3,6 +3,7 @@ import { Inter, Geist_Mono } from "next/font/google";
 import "./globals.css";
 import Navbar from "@/components/Navbar";
 import { SiteFooter } from "@/components/ui";
+import SwRegister from "@/components/SwRegister";
 
 const inter = Inter({
   variable: "--font-inter",
@@ -18,6 +19,13 @@ export const metadata: Metadata = {
   title: "SpaceCheck - Check the space before you commit",
   description:
     "Property intelligence for Lagos renters: flooding, electricity, water, road access, network and real resident experiences - matched to what matters to you.",
+  manifest: "/manifest.webmanifest",
+  themeColor: "#00A86B",
+  appleWebApp: { capable: true, title: "SpaceCheck", statusBarStyle: "default" },
+  icons: {
+    icon: "/icon-192.png",
+    apple: "/apple-touch-icon.png",
+  },
 };
 
 // Auth (cookies) is read in Navbar, so never prerender statically.
@@ -34,6 +42,7 @@ export default function RootLayout({ children }: LayoutProps<"/">) {
         style={{ background: "#F8FAFC", color: "#1E293B" }}
       >
         <Navbar />
+        <SwRegister />
         <main className="mx-auto w-full max-w-5xl flex-1 px-4 py-8">
           {children}
         </main>

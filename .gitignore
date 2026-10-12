@@ -259,3 +259,8 @@ __marimo__/
 
 # Streamlit
 .streamlit/secrets.toml
+
+# Android signing - never commit keys
+*.jks
+*.keystore
+release.keystore
