@@ -1,4 +1,4 @@
-import Link from "next/link";
+﻿import Link from "next/link";
 import { login } from "@/app/auth/actions";
 import { BrandMark } from "@/components/ui";
 
@@ -15,7 +15,7 @@ export default async function LoginPage({
         <BrandMark />
         <h1 style={{ fontSize: "1.4rem", fontWeight: 800 }}>Welcome back</h1>
       </div>
-      <p style={{ marginTop: "0.3rem", fontSize: "0.88rem", color: "#57534e" }}>
+      <p style={{ marginTop: "0.3rem", fontSize: "0.88rem", color: "#475569" }}>
         Log in to see your personal Fit Scores and saved properties.
       </p>
       {error && (
@@ -34,10 +34,10 @@ export default async function LoginPage({
         </label>
         <button type="submit" className="btn-primary">Log in</button>
       </form>
-      <p style={{ marginTop: "1rem", fontSize: "0.85rem", color: "#57534e" }}>
-        <Link href="/forgot-password" style={{ color: "#047857", fontWeight: 600 }}>Forgot password?</Link>
-        {" · "}
-        <Link href="/signup" style={{ color: "#047857", fontWeight: 600 }}>Create account</Link>
+      <p style={{ marginTop: "1rem", fontSize: "0.85rem", color: "#475569" }}>
+        <Link href="/forgot-password" style={{ color: "#00a86b", fontWeight: 600 }}>Forgot password?</Link>
+        {" Â· "}
+        <Link href="/signup" style={{ color: "#00a86b", fontWeight: 600 }}>Create account</Link>
       </p>
     </div>
   );

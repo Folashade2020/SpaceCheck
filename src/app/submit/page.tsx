@@ -1,4 +1,4 @@
-import { redirect } from "next/navigation";
+﻿import { redirect } from "next/navigation";
 import { createClient } from "@/lib/supabase/server";
 import SubmitWizard from "./SubmitWizard";
 
@@ -22,8 +22,8 @@ export default async function SubmitPage({
       <h1 style={{ fontSize: "1.6rem", fontWeight: 800, letterSpacing: "-0.01em" }}>
         List your property
       </h1>
-      <p style={{ marginTop: "0.3rem", fontSize: "0.9rem", color: "#57534e" }}>
-        Four quick steps. Anything you skip shows as “Not provided” — we never
+      <p style={{ marginTop: "0.3rem", fontSize: "0.9rem", color: "#475569" }}>
+        Four quick steps. Anything you skip shows as â€œNot providedâ€ â€” we never
         guess on your behalf.
       </p>
       {error && (

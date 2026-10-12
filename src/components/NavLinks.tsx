@@ -1,4 +1,4 @@
-"use client";
+﻿"use client";
 
 import Link from "next/link";
 import { usePathname } from "next/navigation";
@@ -28,7 +28,7 @@ export function DesktopNav({ loggedIn }: { loggedIn: boolean }) {
             padding: "0.45rem 0.85rem",
             borderRadius: 999,
             background: isActive(pathname, "/search") ? "#ecfdf5" : "transparent",
-            color: isActive(pathname, "/search") ? "#065f46" : "#1c1917",
+            color: isActive(pathname, "/search") ? "#007a4d" : "#1e293b",
           }}
         >
           Search
@@ -56,7 +56,7 @@ export function DesktopNav({ loggedIn }: { loggedIn: boolean }) {
               padding: "0.45rem 0.85rem",
               borderRadius: 999,
               background: active ? "#ecfdf5" : "transparent",
-              color: active ? "#065f46" : "#1c1917",
+              color: active ? "#007a4d" : "#1e293b",
             }}
           >
             {l.label}
@@ -95,7 +95,7 @@ export function MobileNavMenu({ loggedIn }: { loggedIn: boolean }) {
               borderRadius: 8,
               fontWeight: 700,
               background: active ? "#ecfdf5" : "transparent",
-              color: active ? "#065f46" : "#1c1917",
+              color: active ? "#007a4d" : "#1e293b",
             }}
           >
             {l.label}

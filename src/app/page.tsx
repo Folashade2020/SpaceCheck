@@ -1,4 +1,4 @@
-import Link from "next/link";
+﻿import Link from "next/link";
 import { BrandMark, EvidenceBadge } from "@/components/ui";
 import { DISTRICTS, PROPERTY_TYPES } from "@/lib/locations";
 
@@ -6,17 +6,17 @@ const AREAS = ["Opebi", "Allen Avenue", "Sangotedo", "Lekki Phase 1", "Yaba", "S
 
 function IconTarget() {
   return (
-    <svg width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="#047857" strokeWidth="2" aria-hidden>
+    <svg width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="#00a86b" strokeWidth="2" aria-hidden>
       <circle cx="12" cy="12" r="9" />
       <circle cx="12" cy="12" r="4.5" />
-      <circle cx="12" cy="12" r="1" fill="#047857" />
+      <circle cx="12" cy="12" r="1" fill="#00a86b" />
     </svg>
   );
 }
 
 function IconPin() {
   return (
-    <svg width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="#047857" strokeWidth="2" aria-hidden>
+    <svg width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="#00a86b" strokeWidth="2" aria-hidden>
       <path d="M12 21s-7-5.5-7-11a7 7 0 0 1 14 0c0 5.5-7 11-7 11z" />
       <circle cx="12" cy="10" r="2.5" />
     </svg>
@@ -25,21 +25,21 @@ function IconPin() {
 
 function IconShield() {
   return (
-    <svg width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="#047857" strokeWidth="2" aria-hidden>
+    <svg width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="#00a86b" strokeWidth="2" aria-hidden>
       <path d="M12 3l7 3v5c0 5-3.5 8-7 10-3.5-2-7-5-7-10V6l7-3z" />
       <path d="M9 12l2 2 4-4" />
     </svg>
   );
 }
 
-// Clearly-labeled illustrative mock — not real listing data.
+// Clearly-labeled illustrative mock â€” not real listing data.
 function IntelligencePreviewCard() {
   return (
     <div
       aria-label="Sample SpaceCheck intelligence card preview"
       style={{
         background: "#fff",
-        color: "#1c1917",
+        color: "#1e293b",
         borderRadius: 16,
         padding: "1.2rem 1.3rem",
         maxWidth: 380,
@@ -47,29 +47,29 @@ function IntelligencePreviewCard() {
         boxShadow: "0 18px 45px rgb(0 0 0 / 0.35)",
       }}
     >
-      <p style={{ fontSize: "0.68rem", fontWeight: 800, color: "#047857", textTransform: "uppercase", letterSpacing: "0.1em" }}>
-        Sample preview · illustrative
+      <p style={{ fontSize: "0.68rem", fontWeight: 800, color: "#00a86b", textTransform: "uppercase", letterSpacing: "0.1em" }}>
+        Sample preview Â· illustrative
       </p>
       <div style={{ marginTop: "0.4rem", display: "flex", justifyContent: "space-between", alignItems: "center", gap: "0.6rem" }}>
         <div>
-          <p style={{ fontWeight: 800, fontSize: "1rem" }}>2-bed · Opebi, Ikeja</p>
-          <p style={{ fontSize: "0.78rem", color: "#78716c" }}>Ocean-view Estate · sample</p>
+          <p style={{ fontWeight: 800, fontSize: "1rem" }}>2-bed Â· Opebi, Ikeja</p>
+          <p style={{ fontSize: "0.78rem", color: "#64748b" }}>Ocean-view Estate Â· sample</p>
         </div>
         <div style={{ textAlign: "center", background: "#ecfdf5", borderRadius: 12, padding: "0.4rem 0.7rem" }}>
-          <p style={{ fontWeight: 800, fontSize: "1.25rem", color: "#065f46" }}>87%</p>
-          <p style={{ fontSize: "0.65rem", color: "#065f46", fontWeight: 700 }}>Credibility</p>
+          <p style={{ fontWeight: 800, fontSize: "1.25rem", color: "#007a4d" }}>87%</p>
+          <p style={{ fontSize: "0.65rem", color: "#007a4d", fontWeight: 700 }}>Credibility</p>
         </div>
       </div>
-      <div style={{ marginTop: "0.7rem", background: "#FAF9F6", border: "1px solid #e7e5e4", borderRadius: 10, padding: "0.6rem 0.75rem", fontSize: "0.8rem", color: "#44403c", lineHeight: 1.6 }}>
+      <div style={{ marginTop: "0.7rem", background: "#F8FAFC", border: "1px solid #e2e8f0", borderRadius: 10, padding: "0.6rem 0.75rem", fontSize: "0.8rem", color: "#334155", lineHeight: 1.6 }}>
         <strong>AI insight (sample):</strong> power averages ~14 hrs/day;
         no flood history reported on this street; access road untarred but
         passable year-round.
       </div>
       <div style={{ marginTop: "0.7rem", display: "flex", flexWrap: "wrap", gap: "0.4rem" }}>
         {[
-          { k: "Flood Risk", v: "Low", bg: "#ecfdf5", fg: "#065f46" },
-          { k: "Power", v: "14h/day", bg: "#ecfdf5", fg: "#065f46" },
-          { k: "Water", v: "Borehole", bg: "#f5f5f4", fg: "#57534e" },
+          { k: "Flood Risk", v: "Low", bg: "#ecfdf5", fg: "#007a4d" },
+          { k: "Power", v: "14h/day", bg: "#ecfdf5", fg: "#007a4d" },
+          { k: "Water", v: "Borehole", bg: "#f1f5f9", fg: "#475569" },
           { k: "Road", v: "Fair", bg: "#fffbeb", fg: "#92400e" },
         ].map((m) => (
           <span key={m.k} style={{ fontSize: "0.72rem", fontWeight: 700, borderRadius: 999, padding: "0.28rem 0.65rem", background: m.bg, color: m.fg }}>
@@ -79,7 +79,7 @@ function IntelligencePreviewCard() {
       </div>
       <div style={{ marginTop: "0.7rem", display: "flex", gap: "0.4rem", alignItems: "center" }}>
         <EvidenceBadge status="Verified" />
-        <span style={{ fontSize: "0.72rem", color: "#78716c" }}>2 resident reports · sample data</span>
+        <span style={{ fontSize: "0.72rem", color: "#64748b" }}>2 resident reports Â· sample data</span>
       </div>
     </div>
   );
@@ -93,9 +93,9 @@ export default function Home() {
         className="card"
         style={{
           padding: "clamp(1.8rem, 5vw, 3rem)",
-          background: "#1C1917",
-          borderColor: "#1C1917",
-          color: "#FAF9F6",
+          background: "#1E293B",
+          borderColor: "#1E293B",
+          color: "#F8FAFC",
         }}
       >
         <div
@@ -114,13 +114,13 @@ export default function Home() {
                 gap: "0.45rem",
                 fontSize: "0.76rem",
                 fontWeight: 800,
-                color: "#1c1917",
+                color: "#1e293b",
                 background: "#A7F3D0",
                 borderRadius: 999,
                 padding: "0.32rem 0.8rem",
               }}
             >
-              ✨ AI-Powered Neighborhood Intelligence
+              âœ¨ AI-Powered Neighborhood Intelligence
             </p>
             <h1
               style={{
@@ -133,9 +133,9 @@ export default function Home() {
             >
               Check the space before you commit.
             </h1>
-            <p style={{ marginTop: "0.8rem", color: "#D6D3D1", fontSize: "0.98rem", lineHeight: 1.6 }}>
+            <p style={{ marginTop: "0.8rem", color: "#CBD5E1", fontSize: "0.98rem", lineHeight: 1.6 }}>
               Photos tell you the rent. SpaceCheck tells you the flooding,
-              electricity, water, road access — and what residents actually
+              electricity, water, road access â€” and what residents actually
               experienced.
             </p>
 
@@ -151,12 +151,12 @@ export default function Home() {
                 flexWrap: "wrap",
                 gap: "0.6rem",
                 alignItems: "end",
-                color: "#1c1917",
+                color: "#1e293b",
               }}
             >
               <label style={{ flex: "2 1 180px", fontSize: "0.75rem", fontWeight: 700 }}>
                 LOCATION
-                <input name="q" placeholder="Area, estate or district…" className="input" list="sc-areas" />
+                <input name="q" placeholder="Area, estate or districtâ€¦" className="input" list="sc-areas" />
                 <datalist id="sc-areas">
                   {Object.entries(DISTRICTS).map(([d, areas]) =>
                     areas.map((a) => <option key={`${d}-${a}`} value={a} />)
@@ -173,7 +173,7 @@ export default function Home() {
                 </select>
               </label>
               <label style={{ flex: "1 1 120px", fontSize: "0.75rem", fontWeight: 700 }}>
-                MAX / YEAR (₦)
+                MAX / YEAR (â‚¦)
                 <input name="max" type="number" placeholder="e.g. 2000000" className="input" />
               </label>
               <button
@@ -181,7 +181,7 @@ export default function Home() {
                 className="btn-primary"
                 style={{ fontSize: "1rem", padding: "0.8rem 1.8rem", boxShadow: "0 6px 18px rgb(4 120 87 / 0.45)" }}
               >
-                Search →
+                Search â†’
               </button>
             </form>
             <div style={{ marginTop: "0.8rem", display: "flex", flexWrap: "wrap", gap: "0.45rem" }}>
@@ -192,8 +192,8 @@ export default function Home() {
                   style={{
                     fontSize: "0.8rem",
                     fontWeight: 600,
-                    color: "#FAF9F6",
-                    border: "1px solid #44403c",
+                    color: "#F8FAFC",
+                    border: "1px solid #334155",
                     borderRadius: 999,
                     padding: "0.3rem 0.8rem",
                   }}
@@ -212,14 +212,14 @@ export default function Home() {
       {/* Value cards with icons */}
       <section style={{ display: "grid", gap: "0.8rem", gridTemplateColumns: "repeat(auto-fit, minmax(220px, 1fr))" }}>
         {[
-          { icon: <IconTarget />, t: "AI Fit Score", b: "Best Match for You ranks every listing against your budget, areas and priorities — with confidence shown separately." },
+          { icon: <IconTarget />, t: "AI Fit Score", b: "Best Match for You ranks every listing against your budget, areas and priorities â€” with confidence shown separately." },
           { icon: <IconPin />, t: "Street-Level Truth", b: "Opebi is not all of Ikeja. Reports keep their neighbourhood and estate scope, with dates and contributor types." },
-          { icon: <IconShield />, t: "Conflict-Free Proof", b: "Verified, owner-reported or community-reported — plus conflicts shown, never hidden. Promotion never moves a score." },
+          { icon: <IconShield />, t: "Conflict-Free Proof", b: "Verified, owner-reported or community-reported â€” plus conflicts shown, never hidden. Promotion never moves a score." },
         ].map((c) => (
           <div key={c.t} className="card" style={{ padding: "1.2rem 1.3rem" }}>
             {c.icon}
             <h2 style={{ marginTop: "0.6rem", fontWeight: 800 }}>{c.t}</h2>
-            <p style={{ marginTop: "0.4rem", fontSize: "0.88rem", color: "#57534e", lineHeight: 1.6 }}>{c.b}</p>
+            <p style={{ marginTop: "0.4rem", fontSize: "0.88rem", color: "#475569", lineHeight: 1.6 }}>{c.b}</p>
           </div>
         ))}
       </section>
@@ -236,17 +236,17 @@ export default function Home() {
           }}
         >
           {[
-            { n: "01", t: "Set what matters", b: "Areas, budget and priorities — flood, power, water, roads." },
+            { n: "01", t: "Set what matters", b: "Areas, budget and priorities â€” flood, power, water, roads." },
             { n: "02", t: "Compare matches", b: "Fit Scores and dealbreakers side by side, honestly labeled." },
             { n: "03", t: "Read the report", b: "Estate context, evidence and missing info before travelling." },
             { n: "04", t: "Visit & give back", b: "Inspect, verify, then report for the next renter." },
           ].map((s) => (
-            <div key={s.n} style={{ border: "1px solid #e7e5e4", borderRadius: 12, padding: "1rem 1.1rem", background: "#FAF9F6" }}>
-              <span style={{ display: "inline-flex", alignItems: "center", justifyContent: "center", width: 40, height: 40, borderRadius: 12, background: "#047857", color: "#fff", fontWeight: 800, fontSize: "0.95rem" }}>
+            <div key={s.n} style={{ border: "1px solid #e2e8f0", borderRadius: 12, padding: "1rem 1.1rem", background: "#F8FAFC" }}>
+              <span style={{ display: "inline-flex", alignItems: "center", justifyContent: "center", width: 40, height: 40, borderRadius: 12, background: "#00a86b", color: "#fff", fontWeight: 800, fontSize: "0.95rem" }}>
                 {s.n}
               </span>
               <h3 style={{ marginTop: "0.6rem", fontWeight: 750 }}>{s.t}</h3>
-              <p style={{ marginTop: "0.3rem", fontSize: "0.86rem", color: "#57534e", lineHeight: 1.55 }}>{s.b}</p>
+              <p style={{ marginTop: "0.3rem", fontSize: "0.86rem", color: "#475569", lineHeight: 1.55 }}>{s.b}</p>
             </div>
           ))}
         </div>
@@ -260,9 +260,9 @@ export default function Home() {
       <section className="card" style={{ padding: "1.4rem" }}>
         <div style={{ display: "flex", alignItems: "center", gap: "0.6rem" }}>
           <BrandMark size={26} />
-          <h2 style={{ fontSize: "1.15rem", fontWeight: 800 }}>What “verified” means here</h2>
+          <h2 style={{ fontSize: "1.15rem", fontWeight: 800 }}>What â€œverifiedâ€ means here</h2>
         </div>
-        <p style={{ marginTop: "0.35rem", fontSize: "0.88rem", color: "#57534e" }}>
+        <p style={{ marginTop: "0.35rem", fontSize: "0.88rem", color: "#475569" }}>
           Unknown stays unknown. Promotion never changes a score.
         </p>
         <div style={{ marginTop: "0.7rem", display: "flex", flexWrap: "wrap", gap: "0.5rem" }}>

@@ -1,4 +1,4 @@
-import Link from "next/link";
+﻿import Link from "next/link";
 import type { ReactNode } from "react";
 
 export function BrandMark({ size = 30 }: { size?: number }) {
@@ -9,7 +9,7 @@ export function BrandMark({ size = 30 }: { size?: number }) {
         width: size,
         height: size,
         borderRadius: 9,
-        background: "#047857",
+        background: "#00a86b",
         color: "#fff",
         display: "inline-flex",
         alignItems: "center",
@@ -18,7 +18,7 @@ export function BrandMark({ size = 30 }: { size?: number }) {
         fontSize: size * 0.55,
       }}
     >
-      ✓
+      âœ“
     </span>
   );
 }
@@ -85,7 +85,7 @@ export function ScoreRing({
         <span style={{ fontSize: 26, fontWeight: 800, lineHeight: 1 }}>
           {score}
         </span>
-        <span style={{ fontSize: 11, color: "#78716c" }}>/100 fit</span>
+        <span style={{ fontSize: 11, color: "#64748b" }}>/100 fit</span>
       </div>
     </div>
   );
@@ -103,7 +103,7 @@ export function EmptyState({
   return (
     <div className="card" style={{ padding: "2rem", textAlign: "center" }}>
       <p style={{ fontWeight: 700, fontSize: "1.05rem" }}>{title}</p>
-      <p style={{ marginTop: "0.4rem", fontSize: "0.9rem", color: "#57534e" }}>
+      <p style={{ marginTop: "0.4rem", fontSize: "0.9rem", color: "#475569" }}>
         {body}
       </p>
       {action && (
@@ -117,7 +117,7 @@ export function EmptyState({
 
 export function SiteFooter() {
   return (
-    <footer style={{ borderTop: "1px solid #e7e5e4", background: "#1c1917", color: "#e7e5e4" }}>
+    <footer style={{ borderTop: "1px solid #e2e8f0", background: "#1e293b", color: "#e2e8f0" }}>
       <div
         className="mx-auto w-full max-w-5xl px-4"
         style={{
@@ -131,7 +131,7 @@ export function SiteFooter() {
           <BrandMark />
           <div>
             <p style={{ fontWeight: 800 }}>SpaceCheck</p>
-            <p style={{ fontSize: "0.82rem", color: "#a8a29e" }}>
+            <p style={{ fontSize: "0.82rem", color: "#94a3b8" }}>
               Check the space before you commit.
             </p>
           </div>
@@ -144,15 +144,15 @@ export function SiteFooter() {
             fontSize: "0.85rem",
           }}
         >
-          <Link href="/search" style={{ color: "#e7e5e4" }}>Search properties</Link>
-          <Link href="/preferences" style={{ color: "#e7e5e4" }}>Set preferences</Link>
-          <Link href="/submit" style={{ color: "#e7e5e4" }}>List a property</Link>
-          <Link href="/signup" style={{ color: "#e7e5e4" }}>Sign up</Link>
-          <Link href="/login" style={{ color: "#e7e5e4" }}>Log in</Link>
+          <Link href="/search" style={{ color: "#e2e8f0" }}>Search properties</Link>
+          <Link href="/preferences" style={{ color: "#e2e8f0" }}>Set preferences</Link>
+          <Link href="/submit" style={{ color: "#e2e8f0" }}>List a property</Link>
+          <Link href="/signup" style={{ color: "#e2e8f0" }}>Sign up</Link>
+          <Link href="/login" style={{ color: "#e2e8f0" }}>Log in</Link>
         </div>
-        <p style={{ fontSize: "0.75rem", color: "#a8a29e", borderTop: "1px solid #44403c", paddingTop: "1rem" }}>
+        <p style={{ fontSize: "0.75rem", color: "#94a3b8", borderTop: "1px solid #334155", paddingTop: "1rem" }}>
           SpaceCheck shows what is known and labels what is not. Unknown
-          information appears as “Not provided” or “Limited information” — never
+          information appears as â€œNot providedâ€ or â€œLimited informationâ€ â€” never
           invented. Exact residential addresses are never published.
         </p>
       </div>

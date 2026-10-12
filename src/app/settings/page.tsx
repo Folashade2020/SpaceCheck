@@ -1,4 +1,4 @@
-import { redirect } from "next/navigation";
+﻿import { redirect } from "next/navigation";
 import { createClient } from "@/lib/supabase/server";
 import { deleteMyData } from "./actions";
 import { BrandMark } from "@/components/ui";
@@ -27,7 +27,7 @@ export default async function SettingsPage({
 
       <section className="card" style={{ padding: "1.3rem 1.4rem" }}>
         <h2 style={{ fontWeight: 800 }}>Your data (NDPA)</h2>
-        <p style={{ marginTop: "0.4rem", fontSize: "0.88rem", color: "#57534e", lineHeight: 1.6 }}>
+        <p style={{ marginTop: "0.4rem", fontSize: "0.88rem", color: "#475569", lineHeight: 1.6 }}>
           SpaceCheck protects your data under the Nigeria Data Protection Act.
           Your exact street address is never published, and contact details are
           shared only with a confirmed viewing counterparty. You may withdraw
@@ -42,7 +42,7 @@ export default async function SettingsPage({
 
       <section className="card" style={{ padding: "1.3rem 1.4rem", borderColor: "#fecaca" }}>
         <h2 style={{ fontWeight: 800, color: "#b91c1c" }}>Danger zone</h2>
-        <p style={{ marginTop: "0.4rem", fontSize: "0.87rem", color: "#57534e", lineHeight: 1.6 }}>
+        <p style={{ marginTop: "0.4rem", fontSize: "0.87rem", color: "#475569", lineHeight: 1.6 }}>
           Delete My Account &amp; Personal Data: removes your profile,
           preferences, saves, viewing requests and flags, anonymizes your
           listings and reports, and logs you out. Listings you created stay
@@ -57,9 +57,9 @@ export default async function SettingsPage({
             Delete My Account &amp; Personal Data
           </button>
         </form>
-        <p style={{ marginTop: "0.6rem", fontSize: "0.78rem", color: "#78716c" }}>
+        <p style={{ marginTop: "0.6rem", fontSize: "0.78rem", color: "#64748b" }}>
           Note: the bare login identity is removed separately via Supabase
-          Dashboard → Authentication (requires the service key, never shipped
+          Dashboard â†’ Authentication (requires the service key, never shipped
           in the app).
         </p>
       </section>

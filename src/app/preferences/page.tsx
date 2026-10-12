@@ -39,7 +39,7 @@ export default async function PreferencesPage({
           What matters to you?
         </h1>
         <p className="mt-1 text-sm text-zinc-600">
-          Short onboarding (PRD Sec 11). Used only to rank <em>Best Match for
+          Short onboarding. Used only to rank <em>Best Match for
           You</em> and compute your personal Fit Score — never shared.
         </p>
         {error && (

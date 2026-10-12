@@ -1,4 +1,4 @@
-import Link from "next/link";
+﻿import Link from "next/link";
 import { signup } from "@/app/auth/actions";
 import { BrandMark } from "@/components/ui";
 import NdpaConsent from "@/components/NdpaConsent";
@@ -16,7 +16,7 @@ export default async function SignupPage({
         <BrandMark />
         <h1 style={{ fontSize: "1.4rem", fontWeight: 800 }}>Create account</h1>
       </div>
-      <p style={{ marginTop: "0.3rem", fontSize: "0.88rem", color: "#57534e" }}>
+      <p style={{ marginTop: "0.3rem", fontSize: "0.88rem", color: "#475569" }}>
         Free. Save properties, request viewings, get personal Fit Scores.
       </p>
       {error && (
@@ -34,18 +34,18 @@ export default async function SignupPage({
           <input name="password" type="password" required minLength={6} className="input" autoComplete="new-password" />
         </label>
         <label className="label">
-          I am a…
+          I am aâ€¦
           <select name="role" className="input" defaultValue="renter">
-            <option value="renter">Renter — looking for a place</option>
-            <option value="owner_agent">Owner / Agent — listing property</option>
-            <option value="community">Community — lived in / visited</option>
+            <option value="renter">Renter â€” looking for a place</option>
+            <option value="owner_agent">Owner / Agent â€” listing property</option>
+            <option value="community">Community â€” lived in / visited</option>
           </select>
         </label>
         <NdpaConsent />
         <button type="submit" className="btn-primary">Sign up free</button>
       </form>
-      <p style={{ marginTop: "1rem", fontSize: "0.85rem", color: "#57534e" }}>
-        Already have an account? <Link href="/login" style={{ color: "#047857", fontWeight: 600 }}>Log in</Link>
+      <p style={{ marginTop: "1rem", fontSize: "0.85rem", color: "#475569" }}>
+        Already have an account? <Link href="/login" style={{ color: "#00a86b", fontWeight: 600 }}>Log in</Link>
       </p>
     </div>
   );

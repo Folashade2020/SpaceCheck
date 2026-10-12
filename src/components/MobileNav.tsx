@@ -1,4 +1,4 @@
-"use client";
+﻿"use client";
 
 import { useState } from "react";
 import { logout } from "@/app/auth/actions";
@@ -15,14 +15,14 @@ export default function MobileNav({ loggedIn }: { loggedIn: boolean }) {
         aria-expanded={open}
         aria-label={open ? "Close menu" : "Open menu"}
         style={{
-          border: "1px solid #e7e5e4",
+          border: "1px solid #e2e8f0",
           borderRadius: 10,
           padding: "0.45rem 0.7rem",
           fontWeight: 700,
           background: "#fff",
         }}
       >
-        {open ? "✕" : "☰"}
+        {open ? "âœ•" : "â˜°"}
       </button>
       {open && (
         <div

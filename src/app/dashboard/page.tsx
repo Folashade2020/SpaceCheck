@@ -1,4 +1,4 @@
-import Link from "next/link";
+﻿import Link from "next/link";
 import { redirect } from "next/navigation";
 import { createClient } from "@/lib/supabase/server";
 import { calculateFitScore, type PriorityKey } from "@/lib/fitScore";
@@ -18,7 +18,7 @@ function firstName(email: string | null | undefined) {
 }
 
 function rolePill(role: string | null | undefined) {
-  // Honest labels only — we have no owner-verification program.
+  // Honest labels only â€” we have no owner-verification program.
   if (role === "owner_agent") return "Owner Account";
   if (role === "community") return "Community Account";
   return "Renter Account";
@@ -27,7 +27,7 @@ function rolePill(role: string | null | undefined) {
 function requestStatus(status: string) {
   const s = status.toLowerCase();
   if (s === "confirmed" || s === "scheduled")
-    return { label: s === "scheduled" ? "Viewing Scheduled" : "Viewing Confirmed", bg: "#ecfdf5", fg: "#065f46", dot: "#047857" };
+    return { label: s === "scheduled" ? "Viewing Scheduled" : "Viewing Confirmed", bg: "#ecfdf5", fg: "#007a4d", dot: "#00a86b" };
   if (s === "cancelled" || s === "declined" || s === "action")
     return { label: "Needs Action", bg: "#fef2f2", fg: "#b91c1c", dot: "#dc2626" };
   return { label: "Pending Agent Confirmation", bg: "#fffbeb", fg: "#92400e", dot: "#d97706" };
@@ -36,8 +36,8 @@ function requestStatus(status: string) {
 function HouseBookmarkArt() {
   return (
     <svg width="72" height="72" viewBox="0 0 72 72" fill="none" aria-hidden>
-      <path d="M14 32 36 14l22 18" stroke="#047857" strokeWidth="4" strokeLinecap="round" strokeLinejoin="round" />
-      <rect x="20" y="32" width="32" height="24" rx="4" stroke="#047857" strokeWidth="4" />
+      <path d="M14 32 36 14l22 18" stroke="#00a86b" strokeWidth="4" strokeLinecap="round" strokeLinejoin="round" />
+      <rect x="20" y="32" width="32" height="24" rx="4" stroke="#00a86b" strokeWidth="4" />
       <path d="M48 22v-8h8v14" stroke="#00A86B" strokeWidth="4" strokeLinecap="round" strokeLinejoin="round" />
       <rect x="31" y="43" width="10" height="13" rx="2" fill="#A7F3D0" />
     </svg>
@@ -120,9 +120,9 @@ export default async function DashboardPage() {
 
   const pendingCount = (myRequests ?? []).filter((r) => r.status === "pending").length;
   const metrics = [
-    { icon: "♡", label: "Saved Spaces", value: String(savedProps.length), sub: savedProps.length === 1 ? "1 home shortlisted" : "homes shortlisted", href: "#saved", link: "Browse saved" },
-    { icon: "◷", label: "Viewing Requests", value: String(myRequests?.length ?? 0), sub: pendingCount > 0 ? `${pendingCount} pending` : "all settled", href: "#requests", link: "View activity", badge: pendingCount > 0 ? `${pendingCount} Pending` : undefined },
-    { icon: "✦", label: "Intelligence Reports", value: String(myReports?.length ?? 0), sub: "reports you contributed", href: "/search", link: "Keep exploring" },
+    { icon: "â™¡", label: "Saved Spaces", value: String(savedProps.length), sub: savedProps.length === 1 ? "1 home shortlisted" : "homes shortlisted", href: "#saved", link: "Browse saved" },
+    { icon: "â—·", label: "Viewing Requests", value: String(myRequests?.length ?? 0), sub: pendingCount > 0 ? `${pendingCount} pending` : "all settled", href: "#requests", link: "View activity", badge: pendingCount > 0 ? `${pendingCount} Pending` : undefined },
+    { icon: "âœ¦", label: "Intelligence Reports", value: String(myReports?.length ?? 0), sub: "reports you contributed", href: "/search", link: "Keep exploring" },
   ];
 
   return (
@@ -131,9 +131,9 @@ export default async function DashboardPage() {
       <div style={{ display: "flex", flexWrap: "wrap", alignItems: "center", justifyContent: "space-between", gap: "0.6rem" }}>
         <div>
           <h1 style={{ fontSize: 24, fontWeight: 700, letterSpacing: "-0.01em" }}>
-            Welcome back, {firstName(profile?.email ?? user.email)} 👋
+            Welcome back, {firstName(profile?.email ?? user.email)} ðŸ‘‹
           </h1>
-          <p style={{ marginTop: "0.25rem", fontSize: 14, color: "#57534e" }}>
+          <p style={{ marginTop: "0.25rem", fontSize: 14, color: "#475569" }}>
             {profile?.email ?? user.email}{" "}
             <span className="badge badge-brand" style={{ fontSize: 12, marginLeft: "0.35rem" }}>
               {rolePill(profile?.role)}
@@ -141,7 +141,7 @@ export default async function DashboardPage() {
           </p>
         </div>
         <Link href="/search" className="btn-primary" style={{ background: "#00A86B", boxShadow: "0 6px 16px rgb(0 168 107 / 0.35)" }}>
-          Explore Properties →
+          Explore Properties â†’
         </Link>
       </div>
 
@@ -150,7 +150,7 @@ export default async function DashboardPage() {
         {metrics.map((m) => (
           <div key={m.label} className="card" style={{ padding: "1.1rem 1.2rem", border: "1px solid #E5E7EB", boxShadow: "0 4px 12px rgb(0 0 0 / 0.05)" }}>
             <div style={{ display: "flex", alignItems: "center", justifyContent: "space-between" }}>
-              <span style={{ width: 36, height: 36, borderRadius: 10, background: "#ecfdf5", color: "#047857", display: "inline-flex", alignItems: "center", justifyContent: "center", fontSize: 18 }}>
+              <span style={{ width: 36, height: 36, borderRadius: 10, background: "#ecfdf5", color: "#00a86b", display: "inline-flex", alignItems: "center", justifyContent: "center", fontSize: 18 }}>
                 {m.icon}
               </span>
               {m.badge && (
@@ -159,9 +159,9 @@ export default async function DashboardPage() {
             </div>
             <p style={{ marginTop: "0.7rem", fontSize: 26, fontWeight: 800, lineHeight: 1 }}>{m.value}</p>
             <p style={{ fontSize: 14, fontWeight: 700 }}>{m.label}</p>
-            <p style={{ fontSize: 12, color: "#78716c" }}>{m.sub}</p>
-            <Link href={m.href} style={{ marginTop: "0.5rem", display: "inline-block", fontSize: 13, fontWeight: 700, color: "#047857" }}>
-              {m.link} →
+            <p style={{ fontSize: 12, color: "#64748b" }}>{m.sub}</p>
+            <Link href={m.href} style={{ marginTop: "0.5rem", display: "inline-block", fontSize: 13, fontWeight: 700, color: "#00a86b" }}>
+              {m.link} â†’
             </Link>
           </div>
         ))}
@@ -171,9 +171,9 @@ export default async function DashboardPage() {
       <section id="saved" className="card" style={{ padding: "1.3rem 1.4rem", border: "1px solid #E5E7EB", boxShadow: "0 4px 12px rgb(0 0 0 / 0.05)", scrollMarginTop: 80 }}>
         <h2 style={{ fontSize: 18, fontWeight: 700 }}>Saved spaces ({savedProps.length})</h2>
         {savedProps.length === 0 ? (
-          <div style={{ marginTop: "0.8rem", display: "flex", flexDirection: "column", alignItems: "center", textAlign: "center", gap: "0.7rem", padding: "1.4rem 1rem", background: "#FAF9F6", borderRadius: 12 }}>
+          <div style={{ marginTop: "0.8rem", display: "flex", flexDirection: "column", alignItems: "center", textAlign: "center", gap: "0.7rem", padding: "1.4rem 1rem", background: "#F8FAFC", borderRadius: 12 }}>
             <HouseBookmarkArt />
-            <p style={{ fontSize: 14, color: "#44403c", maxWidth: 460, lineHeight: 1.6 }}>
+            <p style={{ fontSize: 14, color: "#334155", maxWidth: 460, lineHeight: 1.6 }}>
               No saved spaces yet. Save properties while searching to compare flood risk, power scores, and credibility side-by-side.
             </p>
             <Link href="/search" className="btn-primary btn-sm">Browse Lagos Listings</Link>
@@ -188,18 +188,18 @@ export default async function DashboardPage() {
                   {thumb ? (
                     <img src={thumb} alt="" loading="lazy" style={{ width: "100%", aspectRatio: "16/9", objectFit: "cover", display: "block" }} />
                   ) : (
-                    <div style={{ aspectRatio: "16/9", background: "#f5f5f4", display: "flex", alignItems: "center", justifyContent: "center", color: "#a8a29e", fontSize: 12, fontWeight: 600 }}>No photo yet</div>
+                    <div style={{ aspectRatio: "16/9", background: "#f1f5f9", display: "flex", alignItems: "center", justifyContent: "center", color: "#94a3b8", fontSize: 12, fontWeight: 600 }}>No photo yet</div>
                   )}
                   <div style={{ padding: "0.75rem 0.9rem" }}>
                     <p style={{ fontWeight: 800, fontSize: 15 }}>
                       {display(p.bedrooms)}-bed {display(p.property_type)}
-                      {fit.score !== null && <span style={{ color: "#047857" }}> · {fit.score}</span>}
+                      {fit.score !== null && <span style={{ color: "#00a86b" }}> Â· {fit.score}</span>}
                     </p>
-                    <p style={{ fontSize: 13, color: "#57534e" }}>
-                      {display(p.neighborhood ?? p.general_area)}{p.area ? `, ${display(p.area)}` : ""} · ₦{p.rent ?? "?"}
+                    <p style={{ fontSize: 13, color: "#475569" }}>
+                      {display(p.neighborhood ?? p.general_area)}{p.area ? `, ${display(p.area)}` : ""} Â· â‚¦{p.rent ?? "?"}
                     </p>
-                    <p style={{ fontSize: 12, color: "#78716c" }}>
-                      ⚡ {display(p.electricity)} · 🌊 {display(p.flood)}
+                    <p style={{ fontSize: 12, color: "#64748b" }}>
+                      âš¡ {display(p.electricity)} Â· ðŸŒŠ {display(p.flood)}
                     </p>
                   </div>
                 </Link>
@@ -213,7 +213,7 @@ export default async function DashboardPage() {
       <section id="requests" className="card" style={{ padding: "1.3rem 1.4rem", border: "1px solid #E5E7EB", boxShadow: "0 4px 12px rgb(0 0 0 / 0.05)", scrollMarginTop: 80 }}>
         <h2 style={{ fontSize: 18, fontWeight: 700 }}>My viewing requests ({myRequests?.length ?? 0})</h2>
         {(myRequests ?? []).length === 0 ? (
-          <p style={{ marginTop: "0.5rem", fontSize: 14, color: "#57534e" }}>
+          <p style={{ marginTop: "0.5rem", fontSize: 14, color: "#475569" }}>
             No requests yet. Open a property and tap Request a Viewing.
           </p>
         ) : (
@@ -228,13 +228,13 @@ export default async function DashboardPage() {
                     {thumb ? (
                       <img src={thumb} alt="" loading="lazy" style={{ width: 84, height: 84, borderRadius: 10, objectFit: "cover", flexShrink: 0 }} />
                     ) : (
-                      <div style={{ width: 84, height: 84, borderRadius: 10, background: "#f5f5f4", display: "flex", alignItems: "center", justifyContent: "center", color: "#a8a29e", fontSize: 11, fontWeight: 700, flexShrink: 0 }}>No photo</div>
+                      <div style={{ width: 84, height: 84, borderRadius: 10, background: "#f1f5f9", display: "flex", alignItems: "center", justifyContent: "center", color: "#94a3b8", fontSize: 11, fontWeight: 700, flexShrink: 0 }}>No photo</div>
                     )}
                     <div style={{ minWidth: 0 }}>
-                      <Link href={`/properties/${r.property_id}`} style={{ fontWeight: 800, fontSize: 14, color: "#1c1917" }}>
+                      <Link href={`/properties/${r.property_id}`} style={{ fontWeight: 800, fontSize: 14, color: "#1e293b" }}>
                         {p ? `${display(p.bedrooms)}-bed ${display(p.property_type)}` : "Property"}
                       </Link>
-                      <p style={{ fontSize: 12, color: "#57534e" }}>
+                      <p style={{ fontSize: 12, color: "#475569" }}>
                         {p ? `${display(p.neighborhood ?? p.general_area)}${p.area ? `, ${display(p.area)}` : ""}` : "Details unavailable"}
                       </p>
                       <span className="badge" style={{ fontSize: 12, marginTop: "0.3rem", background: st.bg, color: st.fg }}>
@@ -244,8 +244,8 @@ export default async function DashboardPage() {
                     </div>
                   </div>
                   {p && (
-                    <p style={{ padding: "0 0.8rem 0.8rem", fontSize: 12, color: "#57534e" }}>
-                      ⚡ {display(p.electricity)} · 🌊 {display(p.flood)} · {new Date(r.created_at).toLocaleDateString()}
+                    <p style={{ padding: "0 0.8rem 0.8rem", fontSize: 12, color: "#475569" }}>
+                      âš¡ {display(p.electricity)} Â· ðŸŒŠ {display(p.flood)} Â· {new Date(r.created_at).toLocaleDateString()}
                     </p>
                   )}
                 </div>
@@ -256,10 +256,10 @@ export default async function DashboardPage() {
       </section>
 
       <div style={{ display: "flex", gap: "0.8rem", fontSize: 13, flexWrap: "wrap" }}>
-        <Link href="/onboarding" style={{ color: "#047857", fontWeight: 600 }}>Change role</Link>
-        <Link href="/preferences" style={{ color: "#047857", fontWeight: 600 }}>Edit preferences</Link>
-        <Link href="/submit" style={{ color: "#047857", fontWeight: 600 }}>List a property</Link>
-        <Link href="/settings" style={{ color: "#047857", fontWeight: 600 }}>Settings & privacy</Link>
+        <Link href="/onboarding" style={{ color: "#00a86b", fontWeight: 600 }}>Change role</Link>
+        <Link href="/preferences" style={{ color: "#00a86b", fontWeight: 600 }}>Edit preferences</Link>
+        <Link href="/submit" style={{ color: "#00a86b", fontWeight: 600 }}>List a property</Link>
+        <Link href="/settings" style={{ color: "#00a86b", fontWeight: 600 }}>Settings & privacy</Link>
       </div>
     </div>
   );

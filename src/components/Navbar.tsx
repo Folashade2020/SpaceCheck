@@ -1,4 +1,4 @@
-import Link from "next/link";
+﻿import Link from "next/link";
 import { createClient } from "@/lib/supabase/server";
 import { BrandMark } from "./ui";
 import MobileNav from "./MobileNav";
@@ -13,7 +13,7 @@ export default async function Navbar() {
   return (
     <header
       style={{
-        borderBottom: "1px solid #e7e5e4",
+        borderBottom: "1px solid #e2e8f0",
         background: "#fff",
         position: "sticky",
         top: 0,

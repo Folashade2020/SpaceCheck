@@ -38,7 +38,7 @@ export default async function FlagPage({
         <h1 className="text-2xl font-bold text-zinc-900">Report listing</h1>
         <p className="mt-1 text-sm text-zinc-600">
           Flags are shown publicly as counts. Listings are never auto-deleted —
-          renters decide with transparency (PRD Sec 22).
+          renters decide with transparency.
         </p>
         {error && (
           <p className="mt-4 rounded bg-red-50 p-2 text-sm text-red-700">
